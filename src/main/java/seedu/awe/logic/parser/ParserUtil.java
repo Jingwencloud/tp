@@ -2,12 +2,17 @@ package seedu.awe.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import seedu.awe.commons.core.index.Index;
 import seedu.awe.commons.util.StringUtil;
+import seedu.awe.logic.commands.CreateGroupCommand;
+import seedu.awe.logic.parser.exceptions.EmptyGroupException;
 import seedu.awe.logic.parser.exceptions.ParseException;
 import seedu.awe.model.expense.Cost;
 import seedu.awe.model.expense.Description;
@@ -141,6 +146,37 @@ public class ParserUtil {
     }
 
     /**
+     * Parses {@code Collection<String> names} into a {@code List<Name>}.
+     * @param names
+     * @return List of names
+     */
+    public static List<Name> parseMemberNames(Collection<String> names) {
+        requireNonNull(names);
+        final Set<Name> memberNameSet = new HashSet<>();
+        final List<Name> memberNameList = new ArrayList<>();
+        boolean isValid = true;
+        int invalidCount = 0;
+        for (String personName : names) {
+            try {
+                new Name(personName);
+            } catch (IllegalArgumentException err) {
+                invalidCount++;
+                isValid = false;
+            }
+            if (isValid) {
+                memberNameSet.add(new Name(personName));
+            }
+            isValid = true;
+        }
+        if (invalidCount == names.size()) {
+            throw new EmptyGroupException(String.format(CreateGroupCommand.MESSAGE_EMPTY_GROUP,
+                    CreateGroupCommand.MESSAGE_INVALID_NAMES, CreateGroupCommand.MESSAGE_INVALID_NAMES));
+        }
+        memberNameList.addAll(memberNameSet);
+        return memberNameList;
+    }
+
+    /**
      * Parses a {@code String cost} into a {@code Cost}.
      * Leading and trailing whitespaces will be trimmed.
      *
@@ -168,5 +204,13 @@ public class ParserUtil {
             throw new ParseException(GroupName.MESSAGE_CONSTRAINTS);
         }
         return new Description(trimmedDescription);
+    }
+
+    /**
+     * Returns true if none of the prefixes contains empty {@code Optional} values in the given
+     * {@code ArgumentMultimap}.
+     */
+    public static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
+        return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
 }

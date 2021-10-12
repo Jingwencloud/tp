@@ -1,12 +1,8 @@
 package seedu.awe.logic.parser.exceptions;
 
-public class EmptyGroupException extends ParseException {
+public class EmptyGroupException extends RuntimeException {
 
     public EmptyGroupException(String message) {
         super(message);
-    }
-
-    public EmptyGroupException(String message, Throwable cause) {
-        super(message, cause);
     }
 }

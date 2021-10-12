@@ -13,9 +13,9 @@ import seedu.awe.model.person.Person;
 /**
  * Deletes a person identified using it's displayed index from the awe book.
  */
-public class DeleteCommand extends Command {
+public class DeleteContactCommand extends Command {
 
-    public static final String COMMAND_WORD = "delete";
+    public static final String COMMAND_WORD = "deletecontact";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Deletes the person identified by the index number used in the displayed person list.\n"
@@ -26,7 +26,7 @@ public class DeleteCommand extends Command {
 
     private final Index targetIndex;
 
-    public DeleteCommand(Index targetIndex) {
+    public DeleteContactCommand(Index targetIndex) {
         this.targetIndex = targetIndex;
     }
 
@@ -50,9 +50,9 @@ public class DeleteCommand extends Command {
             return true;
         }
 
-        if (!(other instanceof DeleteCommand)) { // instanceof handles nulls
+        if (!(other instanceof DeleteContactCommand)) { // instanceof handles nulls
             return false;
         }
-        return targetIndex.equals(((DeleteCommand) other).targetIndex); // state check
+        return targetIndex.equals(((DeleteContactCommand) other).targetIndex); // state check
     }
 }

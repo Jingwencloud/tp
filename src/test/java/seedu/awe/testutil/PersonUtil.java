@@ -8,8 +8,8 @@ import static seedu.awe.logic.parser.CliSyntax.PREFIX_TAG;
 
 import java.util.Set;
 
-import seedu.awe.logic.commands.AddCommand;
-import seedu.awe.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.awe.logic.commands.AddContactCommand;
+import seedu.awe.logic.commands.EditContactCommand.EditPersonDescriptor;
 import seedu.awe.model.person.Person;
 import seedu.awe.model.tag.Tag;
 
@@ -22,7 +22,7 @@ public class PersonUtil {
      * Returns an add command string for adding the {@code person}.
      */
     public static String getAddCommand(Person person) {
-        return AddCommand.COMMAND_WORD + " " + getPersonDetails(person);
+        return AddContactCommand.COMMAND_WORD + " " + getPersonDetails(person);
     }
 
     /**

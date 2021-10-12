@@ -28,13 +28,19 @@ Around the World in $80 (AWE) is a **desktop app for managing contacts, optimize
    
    * **`groups`** : The command `groups` lists all groups.
 
-   * **`add`** : The command `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` adds a contact named `John Doe` to the Address Book.
+   * **`addcontact`** : The command `addcontact n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` adds a contact named `John Doe` to the Address Book.
 
-   * **`delete`**`3` : The command `delete` removes the 3rd contact/expense shown in the current list.
+   * **`deletecontact`** : The command `deletecontact 3` removes the 3rd contact shown in the current list.
+
+   * **`creategroup`** : The command `creategroup gn/Bali n/John Doe n/Jane Doe t/friends` creates a group named Bali containing members `John Doe` and `Jane Doe`, with the tag `friends`.
+
+   * **`deletegroup`** : The command `deletegroup gn/Bali` removes the group named Bali.
+
+   * **`deleteexpense`** : The command `deleteexpense gn/Bali i/1` removes the 1st expense (by one-based-index) from the list of expenses for the group named Bali.
 
    * **`clear`** : The command `clear` removes all expenses / contacts / groups.
 
-   * **`edit`** : The command `edit 1 n/Thomas Betty` edits the name of the 1st person to be Thomas Betty and removes all existing tags.
+   * **`editcontact`** : The command `editcontact 1 n/Thomas Betty` edits the name of the 1st person to be Thomas Betty and removes all existing tags.
 
    * **`exit`** : The command `exit` exits the app.
 
@@ -76,32 +82,31 @@ Shows a message explaning how to access the help page.
 
 Format: `help`
 
-
-### Adding a person: `add`
-
-Adds a person to the address book.
-
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
-
-<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
-A person can have any number of tags (including 0)
-</div>
-
-Examples:
-* `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
-* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
-
 ### Listing all contacts : `contacts`
 
 Shows a list of all contacts in address book.
 
 Format: `contacts`
 
-### Editing a person : `edit`
+### Adding a person: `addcontact`
+
+Adds a person to the address book.
+
+Format: `addcontact n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
+
+<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
+A person can have any number of tags (including 0)
+</div>
+
+Examples:
+* `addcontact n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
+* `addcontact n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
+
+### Editing a person : `editcontact`
 
 Edits an existing person in the address book.
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
+Format: `editcontact INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
 
 * Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
@@ -111,14 +116,28 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
     specifying any tags after it.
 
 Examples:
-*  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
-*  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+*  `editcontact 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
+*  `editcontact 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
-### Locating persons by name: `find`
+### Deleting a person : `delete`
+
+Deletes the specified person from the address book.
+
+Format: `deletecontact INDEX`
+
+* Deletes the person at the specified `INDEX`.
+* The index refers to the index number shown in the displayed person list.
+* The index **must be a positive integer** 1, 2, 3, …​
+
+Examples:
+* `persons` followed by `deletecontact 2` deletes the 2nd person in the address book.
+* `find Betsy` followed by `deletecontact 1` deletes the 1st person in the results of the `find` command.
+
+### Locating persons by name: `findcontacts`
 
 Finds persons whose names contain any of the given keywords.
 
-Format: `find KEYWORD [MORE_KEYWORDS]`
+Format: `findcontacts KEYWORD [MORE_KEYWORDS]`
 
 * The search is case-insensitive. e.g `hans` will match `Hans`
 * The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
@@ -128,36 +147,9 @@ Format: `find KEYWORD [MORE_KEYWORDS]`
   e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
 
 Examples:
-* `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li`<br>
+* `findcontacts John` returns `john` and `John Doe`
+* `findcontacts alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
-
-### Deleting a person : `delete`
-
-Deletes the specified person from the address book.
-
-Format: `delete INDEX`
-
-* Deletes the person at the specified `INDEX`.
-* The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …​
-
-Examples:
-* `persons` followed by `delete 2` deletes the 2nd person in the address book.
-* `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
-
-### Creating a Travel Group: ```create group```
-Creates a group of people of your choice from your address book.
-Adds you as a member of the group by default.
-
-Format: `create group GROUP_NAME : NAME1 : NAME2 : NAME3`
-GROUP_NAME is a mandatory field.
-At least one NAME is necessary.
-The names are required to be in the address book and should match contact names exactly.
-
-Examples:
-create group Bali : Jacob Tan : Max Chia : Julianne Tay
-create group London: Justin Lee : Raj Gopal : Keith Chia
 
 ### Listing all groups : `groups`
 
@@ -165,18 +157,64 @@ Shows a list of all groups in GroupPage.
 
 Format: `groups`
 
-### Deleting a Travel Group: `delete group`
+### Creating a Travel Group: ```creategroup```
+Creates a group of people of your choice from your address book.
+Adds you as a member of the group by default.
+
+Format: `creategroup gn/GROUP_NAME n/NAME1 [n/NAME2] [n/NAME3]...[t/TAG1]`
+
+* GROUP_NAME is a mandatory field.
+* A group with the same name as GROUP_NAME cannot exist for the creation of a group through this command. 
+* At least one NAME is necessary.
+* The names are required to be in the address book and should match contact names exactly.
+* Tags cannot have whitespace and special characters other than alphanumeric characters.
+* Tags are optional.
+
+Examples:
+* creategroup gn/Bali n/Jacob Tan n/Max Chia n/Julianne Tay
+* creategroup gn/London n/Justin Lee n/Raj Gopal n/Keith Chia
+
+### Deleting a Travel Group: `deletegroup`
 Deletes a group from your groups.
 All the details from the group are lost once this action is completed.
 
-Format: `delete group GROUP_NAME`
+Format: `deletegroup gn/GROUP_NAME`
 
 * GROUP_NAME is a mandatory field.
 * A group with GROUP_NAME as its name must exist.
 
 Examples:
-* `delete group Bali`
-* `delete group London`
+* `deletegroup gn/Bali`
+* `deletegroup gn/London`
+
+### Locating group by name: `findgroups`
+
+Find groups whose names contain any of the given keywords.
+
+Format: `findgroupsKEYWORD [MORE_KEYWORDS]`
+
+* The search is case-insensitive. e.g `london` will match `London`
+* The order of the keywords does not matter. e.g. `United States` will match `States United`
+* Only the group name is searched.
+* Only full words will be matched e.g. `London` will not match `Lond`
+* Groups matching at least one keyword will be returned (i.e. `OR` search).
+  e.g. `Taiwan Malaysia` will return `Taiwan`, `Malaysia`
+
+Examples:
+* `findcontacts London` returns `London` and `london trip`
+* `findcontacts Taiwan Malaysia` returns `Taiwan` `Malaysia`<br>
+  ![result for 'findcontacts Taiwan Malaysia'](images/findAlexDavidResult.png)
+  
+### Viewing a shared expense: `expenses`
+Returns a message containing all existing expenses within the active travel group. Expenses are sorted from most recent to least recent.
+
+Format: `expense INDEX`
+
+* GROUP_ID argument is mandatory
+* GROUP_ID must represent the id of an existing travel group
+
+Examples: 
+* `groups` followed by `expense 1` shows all the expenses of the 1st travel group in the group list.
 
 ### Adding a shared expense: `add expense`
 Adds a shared expense to the currently active travel group.
@@ -196,30 +234,20 @@ Examples:
 * add expense /des Koi /by Jake 20.00 /for Justin, Raj, Keith
 * add expense /des Souvenirs for friends /by Tom 20.00 Joan 30.00 Nicholas 10.00 /for Tom, Joan, Nicholas, Keith, Raj
 
-### Viewing a shared expense: `expense`
-Returns a message containing all existing expenses within the active travel group. Expenses are sorted from most recent to least recent.
+### Deleting a shared expense: `deleteexpense`
 
-Format: `expense INDEX`
-
-* GROUP_ID argument is mandatory
-* GROUP_ID must represent the id of an existing travel group
-
-Examples: 
-* `group` followed by `expense 1` shows all the expenses of the 1st travel group in the group list.
-
-### Deleting a shared expense: `delete expense`
-
-Deletes a shared expense from the currently active travel group.
+Deletes a shared expense from a travel group.
 This command deletes the expense for all members involved in the expense.
 
-Format: `delete expense EXPENSE_ID`
+Format: `deleteexpense gn/GROUP_NAME i/INDEX`
 
-* EXPENSE_ID argument is mandatory.
-* EXPENSE_ID must represent the id of an existing expense object.
+* GROUP_NAME argument is mandatory.
+* INDEX argument is mandatory.
+* INDEX has to be between 1 and the length of the list of expenses for the group with name GROUP_NAME.
 
 Examples:
-* `delete expense 10213`
-* `delete expense 33421`
+* `deleteexpense gn/Bali i/1`
+* `deleteexpense gn/London i/2`
 
 ### Saving the data
 
@@ -246,11 +274,6 @@ Exits the program.
 Format: `exit`
 
 
-### Archiving data files `[coming in v2.0]`
-
-_Details coming soon ..._
-
-
 ## FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
@@ -270,15 +293,16 @@ If your questions are not answered in the FAQ, check out the issue page on our G
 
 Action | Format, Examples
 --------|------------------
-**Add Contact** | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
+**Add Contact** | `addcontact n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
 **Add Expense** | `add expense add expense /des DESCRIPTION /by PAYER_NAME1 AMOUNT PAID BY NAME 1 /for PAYEE_NAME1 PAYEE_NAME 2` <br> e.g., `add expense /des Koi /by Jake 20.00 /for Justin, Raj, Keith`
 **Clear** | `clear`
-**Create Group** | `create group GROUP_NAME : NAME1 : NAME2 : NAME3` <br> e.g., `create group Bali : Jacob Tan : Max Chia : Julianne Tay`
-**Delete Contact** | `delete INDEX`<br> e.g., `delete 3`
-**Delete Group** | `delete group GROUP_NAME` <br> e.g., `delete group Vienna`
-**Delete Expense** | `delete expense EXPENSE_ID` <br> e.g., `delete expense 5`
-**Edit** | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Find** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+**Create Group** | `creategroup gn/GROUP_NAME n/NAME1 n/NAME2 n/NAME3...t/TAG1` <br> e.g., `creategroup gn/Bali n/Jacob Tan n/Max Chia n/Julianne Tay t/friends`
+**Delete Contact** | `deletecontact INDEX`<br> e.g., `delete 3`
+**Delete Group** | `deletegroup gn/GROUP_NAME` <br> e.g., `deletegroup gn/Vienna`
+**Delete Expense** | `deleteexpense gn/GROUP_NAME i/INDEX` <br> e.g., `deleteexpense gn/Bali i/1`
+**Edit Contact** | `editcontact INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
+**Find Contacts** | `findcontacts KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+**Find Groups** | `findgroups KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **Help** | `help`
 **View Contacts** | `contacts`
 **View Groups** | `groups`

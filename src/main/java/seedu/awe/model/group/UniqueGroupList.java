@@ -5,11 +5,13 @@ import static seedu.awe.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.awe.model.group.exceptions.DuplicateGroupException;
 import seedu.awe.model.group.exceptions.GroupNotFoundException;
+import seedu.awe.model.person.Person;
 import seedu.awe.model.person.exceptions.DuplicatePersonException;
 
 /**
@@ -91,6 +93,27 @@ public class UniqueGroupList implements Iterable<Group> {
         internalList.remove(groupToDelete);
     }
 
+    /**
+     * Replaces the person {@code target} in groups with {@code editedPerson}.
+     * The person identity of {@code editedPerson} must not be the same as another existing person in the list.
+     */
+    public void updatePerson(Person target, Person editedPerson) {
+        requireAllNonNull(target, editedPerson);
+
+        for (int i = 0; i < internalList.size(); i++) {
+            Group group = internalList.get(i);
+            Optional<Group> updatedPersonGroup = group.updatePerson(target, editedPerson);
+            if (updatedPersonGroup.isPresent()) {
+                internalList.set(i, updatedPersonGroup.get());
+            }
+        }
+    }
+
+    /**
+     * Replace the contents of this list with a new list.
+     *
+     * @param replacement New contents to place in the original list.
+     */
     public void setGroups(UniqueGroupList replacement) {
         requireNonNull(replacement);
         internalList.setAll(replacement.internalList);

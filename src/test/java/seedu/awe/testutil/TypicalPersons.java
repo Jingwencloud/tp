@@ -41,6 +41,8 @@ public class TypicalPersons {
             .withEmail("lydia@example.com").withAddress("little tokyo").build();
     public static final Person GEORGE = new PersonBuilder().withName("George Best").withPhone("9482442")
             .withEmail("anna@example.com").withAddress("4th street").build();
+    public static final Person NONEXISTENTPERSON = new PersonBuilder().withName("Janelle Chua").withPhone("9543442")
+            .withEmail("janelle@example.com").withAddress("20th street").build();
 
     // Manually added
     public static final Person HOON = new PersonBuilder().withName("Hoon Meier").withPhone("8482424")

@@ -14,9 +14,9 @@ import seedu.awe.model.person.Person;
 /**
  * Adds a person to the awe book.
  */
-public class AddCommand extends Command {
+public class AddContactCommand extends Command {
 
-    public static final String COMMAND_WORD = "add";
+    public static final String COMMAND_WORD = "addcontact";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a person to the awe book. "
             + "Parameters: "
@@ -41,7 +41,7 @@ public class AddCommand extends Command {
     /**
      * Creates an AddCommand to add the specified {@code Person}
      */
-    public AddCommand(Person person) {
+    public AddContactCommand(Person person) {
         requireNonNull(person);
         toAdd = person;
     }
@@ -64,10 +64,10 @@ public class AddCommand extends Command {
             return true;
         }
 
-        if (!(other instanceof AddCommand)) { // instanceof handles nulls
+        if (!(other instanceof AddContactCommand)) { // instanceof handles nulls
             return false;
         }
 
-        return toAdd.equals(((AddCommand) other).toAdd);
+        return toAdd.equals(((AddContactCommand) other).toAdd);
     }
 }

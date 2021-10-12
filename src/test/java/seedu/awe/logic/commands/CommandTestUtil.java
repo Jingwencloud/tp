@@ -62,6 +62,14 @@ public class CommandTestUtil {
     public static final String TAG_DESC_FRIENDS = " " + PREFIX_TAG + VALID_GROUP_TAG_FRIENDS;
     public static final String TAG_DESC_FAMILY = " " + PREFIX_TAG + VALID_GROUP_TAG_FAMILY;
 
+    public static final String INVALID_NAME_JAMES = "James#";
+    public static final String INVALID_NAME_JOHN = "Jo&hn*";
+    public static final String INVALID_NAME_GARY = "G(ary&";
+    public static final String INVALID_NAME_DESC_ONE = " "
+            + PREFIX_NAME + INVALID_NAME_JAMES; // '&' not allowed in names
+    public static final String INVALID_NAME_DESC_TWO = " "
+            + PREFIX_NAME + INVALID_NAME_JOHN; // '&' not allowed in names
+    public static final String INVALID_NAME_DESC_THREE = " " + PREFIX_NAME + "G(ary&"; // '&' not allowed in names
     public static final String INVALID_NAME_DESC = " " + PREFIX_NAME + "James&"; // '&' not allowed in names
     public static final String INVALID_PHONE_DESC = " " + PREFIX_PHONE + "911a"; // 'a' not allowed in phones
     public static final String INVALID_EMAIL_DESC = " " + PREFIX_EMAIL + "bob!yahoo"; // missing '@' symbol
@@ -74,8 +82,8 @@ public class CommandTestUtil {
     public static final String PREAMBLE_WHITESPACE = "\t  \r  \n";
     public static final String PREAMBLE_NON_EMPTY = "NonEmptyPreamble";
 
-    public static final EditCommand.EditPersonDescriptor DESC_AMY;
-    public static final EditCommand.EditPersonDescriptor DESC_BOB;
+    public static final EditContactCommand.EditPersonDescriptor DESC_AMY;
+    public static final EditContactCommand.EditPersonDescriptor DESC_BOB;
 
     static {
         DESC_AMY = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)

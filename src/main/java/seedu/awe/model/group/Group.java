@@ -1,13 +1,17 @@
 package seedu.awe.model.group;
 
+import static seedu.awe.commons.util.CollectionUtil.requireAllNonNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import seedu.awe.model.expense.Expense;
 import seedu.awe.model.person.Person;
 import seedu.awe.model.tag.Tag;
+
 
 public class Group {
     //TODO: WRITE MESSAGE CONSTRAINTS MESSAGE
@@ -153,6 +157,76 @@ public class Group {
         ArrayList<Expense> newExpenses = new ArrayList<>(expenses);
         newExpenses.add(expense);
         return new Group(groupName, members, tags, newExpenses);
+    }
+
+    /**
+     * Removes an expense from the group.
+     *
+     * @param expense to be removed from the group.
+     * @return A new group with the expense removed from it.
+     */
+    public Group deleteExpense(Expense expense) {
+        ArrayList<Expense> newExpenses = new ArrayList<>(expenses);
+        newExpenses.remove(expense);
+        return new Group(groupName, members, tags, newExpenses);
+    }
+
+    /**
+     * Replaces the person {@code target} with {@code editedPerson}.
+     * @param target Person to edit
+     * @param editedPerson Person with updated details
+     * @return Group with new person
+     */
+    public Optional<Group> updatePerson(Person target, Person editedPerson) {
+        requireAllNonNull(target, editedPerson);
+
+        boolean isUpdated = false;
+
+        ArrayList<Person> updatedMembers = members;
+        int index = members.indexOf(target);
+        if (index != -1) {
+            updatedMembers.set(index, editedPerson);
+            isUpdated = true;
+        }
+
+        Optional<ArrayList<Expense>> updatedExpensesOptional = updateExpense(target, editedPerson);
+
+        if (updatedExpensesOptional.isPresent()) {
+            isUpdated = true;
+        }
+
+        if (isUpdated) {
+            ArrayList<Expense> updatedExpense = updatedExpensesOptional.orElse(expenses);
+            return Optional.of(new Group(groupName, updatedMembers, tags, updatedExpense));
+        } else {
+            return Optional.ofNullable(null);
+        }
+    }
+
+    /**
+     * Replaces the person {@code target} with {@code editedPerson}.
+     * Only called by {@code updatePerson}.
+     */
+    private Optional<ArrayList<Expense>> updateExpense(Person target, Person editedPerson) {
+        requireAllNonNull(target, editedPerson);
+
+        ArrayList<Expense> updatedExpenses = new ArrayList<>(expenses);
+        boolean isUpdated = false;
+
+        for (int i = 0; i < updatedExpenses.size(); i++) {
+            Expense expense = updatedExpenses.get(i);
+            Optional<Expense> updatedExpense = expense.updatePerson(target, editedPerson);
+            if (updatedExpense.isPresent()) {
+                updatedExpenses.set(i, updatedExpense.get());
+                isUpdated = true;
+            }
+        }
+
+        if (!isUpdated) {
+            updatedExpenses = null;
+        }
+
+        return Optional.ofNullable(updatedExpenses);
     }
 
     @Override

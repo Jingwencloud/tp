@@ -127,5 +127,8 @@ public class ModelBuilder {
         return new ModelManager(addressBook, userPrefs);
     }
 
+    public Model buildEmptyModel() {
+        return new ModelManager(new AddressBook(), new UserPrefs());
+    }
 }
 

@@ -2,11 +2,16 @@ package seedu.awe.logic.parser;
 
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.awe.logic.commands.CreateGroupCommand.MESSAGE_EMPTY_GROUP;
+import static seedu.awe.logic.commands.CreateGroupCommand.MESSAGE_ERROR;
+import static seedu.awe.logic.commands.CreateGroupCommand.MESSAGE_INVALID_NAMES;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_GROUP_NAME;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.awe.logic.parser.CliSyntax.PREFIX_TAG;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import javafx.collections.ObservableList;
@@ -18,6 +23,7 @@ import seedu.awe.model.ReadOnlyAddressBook;
 import seedu.awe.model.group.GroupName;
 import seedu.awe.model.person.Name;
 import seedu.awe.model.person.Person;
+import seedu.awe.model.tag.Tag;
 
 public class CreateGroupCommandParser implements Parser<CreateGroupCommand> {
     private static final String BAD_FORMATTING = "\"creategroup command\" is not properly formatted";
@@ -44,89 +50,49 @@ public class CreateGroupCommandParser implements Parser<CreateGroupCommand> {
      */
     public CreateGroupCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenizeStringWithRepeatedPrefixes(args, PREFIX_NAME, PREFIX_GROUP_NAME);
+                ArgumentTokenizer.tokenize(args, PREFIX_GROUP_NAME, PREFIX_NAME, PREFIX_TAG);
 
-        if (!arePrefixesPresent(argMultimap, PREFIX_GROUP_NAME)
+        if (!ParserUtil.arePrefixesPresent(argMultimap, PREFIX_GROUP_NAME, PREFIX_NAME)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CreateGroupCommand.MESSAGE_USAGE));
         }
 
-        ArrayList<Person> members = findGroupMembers(args);
-
         GroupName groupName = ParserUtil.parseGroupName(argMultimap.getValue(PREFIX_GROUP_NAME).get());
+        List<Name> memberNames = ParserUtil.parseMemberNames(argMultimap.getAllValues(PREFIX_NAME));
+        Set<Tag> tagSet = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
+        ArrayList<Person> members = findGroupMembers(memberNames);
 
         boolean isValidCommand = true;
-        if (groupName.equals(BAD_FORMATTING) || Objects.isNull(members)) {
+        if (groupName.getName().equals(BAD_FORMATTING) || Objects.isNull(members)) {
             isValidCommand = false;
         }
 
-        return new CreateGroupCommand(groupName, members, isValidCommand);
-    }
-
-    /**
-     * Returns group name from user input.
-     * If user input invalid, BAD_FORMATTING is returned.
-     *
-     * @param args String object representing user input into the addressbook.
-     * @return String object representing group name.
-     */
-    private String findGroupName(String args) {
-        //assuming it is already a valid command which will be checked beforehand
-        try {
-            int startIndex = 1;
-            int endIndex = args.indexOf(':') - 1;
-            return args.substring(startIndex, endIndex);
-        } catch (IndexOutOfBoundsException e) {
-            return BAD_FORMATTING;
-        }
+        return new CreateGroupCommand(groupName, members, isValidCommand, tagSet);
     }
 
     /**
      * Returns list of members in the group.
      * If user input not valid, null is returned.
      *
-     * @param args String object representing user input into the addressbook.
+     * @param memberNames List of names representing names entered in command.
      * @return ArrayList of Person objects representing members to be added to the group
      */
-    private ArrayList<Person> findGroupMembers(String args) throws ParseException {
+    public ArrayList<Person> findGroupMembers(List<Name> memberNames) throws ParseException {
         try {
-            String prefixWithWhiteSpace = " " + PREFIX_NAME;
-            int startIndex = args.indexOf(prefixWithWhiteSpace) + 3;
-            if (startIndex == 2) {
-                throw new ParseException(MESSAGE_INVALID_COMMAND_FORMAT);
+            for (Name name : memberNames) {
+                addMemberIfExist(name);
             }
-            String teamMembers = args.substring(startIndex);
-            int nextPrefix = teamMembers.indexOf(prefixWithWhiteSpace);
-            while (nextPrefix != -1) {
-                Name memberName = new Name(teamMembers.substring(0, nextPrefix));
-                if (containsMemberName(memberName)) {
-                    teamMembers = teamMembers.substring(nextPrefix + 3);
-                    nextPrefix = teamMembers.indexOf(prefixWithWhiteSpace);
-                    continue;
-                }
-                if (Objects.isNull(addMemberIfExist(memberName))) {
-                    return null;
-                }
-                teamMembers = teamMembers.substring(nextPrefix + 3);
-                nextPrefix = teamMembers.indexOf(prefixWithWhiteSpace);
+            if (!memberNames.isEmpty() && toBeAddedToGroup.isEmpty()) {
+                throw new ParseException(MESSAGE_ERROR);
+            } else if (toBeAddedToGroup.isEmpty()) {
+                throw new EmptyGroupException(MESSAGE_INVALID_COMMAND_FORMAT);
             }
-            if (!containsMemberName(new Name(teamMembers))) {
-                if (Objects.isNull(addMemberIfExist(new Name(teamMembers)))) {
-                    return null;
-                }
-            }
-
-            if (toBeAddedToGroup.size() == 0) {
-                throw new EmptyGroupException(MESSAGE_EMPTY_GROUP);
-            } else {
-                return toBeAddedToGroup;
-            }
+            return toBeAddedToGroup;
         } catch (IndexOutOfBoundsException e) {
             throw new ParseException(MESSAGE_INVALID_COMMAND_FORMAT);
         } catch (EmptyGroupException err) {
-            throw new EmptyGroupException(String.format(MESSAGE_EMPTY_GROUP, CreateGroupCommand.MESSAGE_USAGE));
-        } catch (ParseException err) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, CreateGroupCommand.MESSAGE_USAGE));
+            throw new EmptyGroupException(String.format(MESSAGE_EMPTY_GROUP, MESSAGE_INVALID_NAMES,
+                    CreateGroupCommand.MESSAGE_USAGE));
         }
     }
 
@@ -135,16 +101,20 @@ public class CreateGroupCommandParser implements Parser<CreateGroupCommand> {
      * If user input not valid, null is returned.
      *
      * @param memberName Name object representing name of member to be added.
-     * @return ArrayList of Person objects representing members to be added to the group
      */
-    private ArrayList<Person> addMemberIfExist(Name memberName) {
+    public boolean addMemberIfExist(Name memberName) throws ParseException {
+        boolean added = false;
         Person memberFound = findMember(memberName, this.allMembers);
-        if (!Objects.isNull(memberFound)) {
+        Stream<Name> namesOfMembers = this.toBeAddedToGroup.stream().map(member -> member.getName());
+        long numOfMembersWithSameName = namesOfMembers.filter(existingName -> existingName.equals(memberName)).count();
+        if (!Objects.isNull(memberFound) && numOfMembersWithSameName == 0) {
             toBeAddedToGroup.add(memberFound);
-        } else {
-            return null;
+            added = true;
         }
-        return this.toBeAddedToGroup;
+        if (!added) {
+            throw new ParseException(MESSAGE_ERROR);
+        }
+        return added;
     }
 
     /**
@@ -155,35 +125,12 @@ public class CreateGroupCommandParser implements Parser<CreateGroupCommand> {
      * @param members ObservableList of Person objects representing all contacts in the addressbook.
      * @return Person object if name matches that of a person from the addressbook.
      */
-    private Person findMember(Name memberName, ObservableList<Person> members) {
+    public static Person findMember(Name memberName, ObservableList<Person> members) {
         for (Person member : members) {
             if (member.getName().equals(memberName)) {
                 return member;
             }
         }
         return null;
-    }
-
-    /**
-     * Returns boolean representing if toBeAddedToGroup contains a member with the same name as the given name.
-     *
-     * @param memberName Name object that belongs to a member.
-     * @return boolean object representing if toBeAddedToGroup contains a member with the same name as the given name.
-     */
-    private boolean containsMemberName(Name memberName) {
-        for (Person member : toBeAddedToGroup) {
-            if (member.getName().equals(memberName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Returns true if none of the prefixes contains empty {@code Optional} values in the given
-     * {@code ArgumentMultimap}.
-     */
-    private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
-        return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
 }

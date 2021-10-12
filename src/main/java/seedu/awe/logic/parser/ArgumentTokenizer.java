@@ -29,26 +29,6 @@ public class ArgumentTokenizer {
     }
 
     /**
-     * Tokenizes an arguments string and returns an {@code ArgumentMultimap} object that maps prefixes to their
-     * respective argument values. Only the given prefixes will be recognized in the arguments string.
-     *
-     * @param argsString Arguments string of the form: {@code preamble <prefix>value <prefix>value ...}
-     * @param prefixes   Prefixes to tokenize the arguments string with
-     * @return           ArgumentMultimap object that maps prefixes to their arguments
-     */
-    public static ArgumentMultimap tokenizeStringWithRepeatedPrefixes(String argsString, Prefix repeatedPrefix,
-                                                                      Prefix... prefixes) {
-        int startOfRepeatedPrefix = argsString.indexOf(" " + repeatedPrefix.getPrefix());
-        if (startOfRepeatedPrefix == -1) {
-            return new ArgumentMultimap();
-        }
-        String stringWihoutRepeatedPrefixes = argsString.substring(0, startOfRepeatedPrefix);
-
-        List<PrefixPosition> positions = findAllPrefixPositions(stringWihoutRepeatedPrefixes, prefixes);
-        return extractArguments(stringWihoutRepeatedPrefixes, positions);
-    }
-
-    /**
      * Finds all zero-based prefix positions in the given arguments string.
      *
      * @param argsString Arguments string of the form: {@code preamble <prefix>value <prefix>value ...}

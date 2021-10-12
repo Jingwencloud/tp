@@ -149,6 +149,7 @@ public class ModelManager implements Model {
     @Override
     public void addGroup(Group group) {
         addressBook.addGroup(group);
+        updateFilteredGroupList(PREDICATE_SHOW_ALL_GROUPS);
     }
 
     /**
@@ -178,6 +179,7 @@ public class ModelManager implements Model {
     public void setGroup(Group group, Group newGroup) {
         requireNonNull(group);
         addressBook.setGroup(group, newGroup);
+        updateFilteredGroupList(PREDICATE_SHOW_ALL_GROUPS);
     }
 
     //=========== Filtered Group List Accessors =============================================================

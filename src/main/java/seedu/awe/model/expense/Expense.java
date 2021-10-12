@@ -1,8 +1,12 @@
 package seedu.awe.model.expense;
 
+import static seedu.awe.commons.util.CollectionUtil.requireAllNonNull;
+
 import java.util.Objects;
+import java.util.Optional;
 
 import seedu.awe.model.person.Person;
+
 
 public class Expense {
 
@@ -36,6 +40,19 @@ public class Expense {
 
     public Description getDescription() {
         return description;
+    }
+
+    /**
+     * Replaces the payee {@code target} with {@code editedPerson}.
+     */
+    public Optional<Expense> updatePerson(Person target, Person editedPerson) {
+        requireAllNonNull(target, editedPerson);
+
+        if (payer.equals(target)) {
+            return Optional.of(new Expense(editedPerson, cost, description));
+        }
+
+        return Optional.ofNullable(null);
     }
 
     @Override

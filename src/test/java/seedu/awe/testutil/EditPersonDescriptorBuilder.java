@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import seedu.awe.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.awe.logic.commands.EditContactCommand.EditPersonDescriptor;
 import seedu.awe.model.person.Address;
 import seedu.awe.model.person.Email;
 import seedu.awe.model.person.Name;

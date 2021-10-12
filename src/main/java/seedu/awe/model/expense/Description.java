@@ -13,7 +13,7 @@ public class Description {
      */
     public static final String VALIDATION_REGEX = "[\\p{Alnum}][\\p{Alnum} ]*";
 
-    public final String fullDescription;
+    private final String fullDescription;
 
     /**
      * Constructs a {@code Name}.
@@ -24,6 +24,10 @@ public class Description {
         requireNonNull(description);
         checkArgument(isValidDescription(description), MESSAGE_CONSTRAINTS);
         fullDescription = description;
+    }
+
+    public String getFullDescription() {
+        return fullDescription;
     }
 
     /**

@@ -1,6 +1,7 @@
 package seedu.awe.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.awe.model.Model.PREDICATE_SHOW_ALL_GROUPS;
 
 import seedu.awe.model.Model;
 
@@ -17,7 +18,7 @@ public class ListGroupsCommand extends Command {
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
-        //model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        model.updateFilteredGroupList(PREDICATE_SHOW_ALL_GROUPS);
         return new CommandResult(MESSAGE_SUCCESS, false, false, true, false, false);
     }
 }

@@ -2,6 +2,10 @@ package seedu.awe.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.awe.logic.commands.CommandTestUtil.INVALID_NAME_JAMES;
+import static seedu.awe.logic.commands.CommandTestUtil.INVALID_NAME_JOHN;
+import static seedu.awe.logic.commands.CommandTestUtil.VALID_NAME_ALICE;
+import static seedu.awe.logic.commands.CommandTestUtil.VALID_NAME_AMY;
 import static seedu.awe.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.awe.testutil.Assert.assertThrows;
 import static seedu.awe.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
@@ -9,10 +13,12 @@ import static seedu.awe.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.awe.logic.parser.exceptions.EmptyGroupException;
 import seedu.awe.logic.parser.exceptions.ParseException;
 import seedu.awe.model.group.GroupName;
 import seedu.awe.model.person.Address;
@@ -221,5 +227,38 @@ public class ParserUtilTest {
         Set<Tag> expectedTagSet = new HashSet<Tag>(Arrays.asList(new Tag(VALID_TAG_1), new Tag(VALID_TAG_2)));
 
         assertEquals(expectedTagSet, actualTagSet);
+    }
+
+    @Test
+    public void parseMemberNames_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseMemberNames(null));
+    }
+
+    @Test
+    public void parseMemberNames_collectionWithInvalidMemberNames_throwsEmptyGroupException() {
+        assertThrows(EmptyGroupException.class, () -> ParserUtil.parseMemberNames(Arrays.asList(INVALID_NAME_JAMES,
+                INVALID_NAME_JOHN)));
+    }
+
+    @Test
+    public void parseMemberNames_emptyCollection_throwsEmptyGroupException() {
+        assertThrows(EmptyGroupException.class, () -> ParserUtil.parseMemberNames(Collections.emptyList()));
+    }
+
+    @Test
+    public void parseMemberNames_collectionWithValidMemberNames_returnsMemberNames() {
+        Set<Name> actualNameSet = Set.copyOf(
+                ParserUtil.parseMemberNames(Arrays.asList(VALID_NAME_ALICE, VALID_NAME_AMY)));
+        Set<Name> expectedNameSet = Set.of(new Name(VALID_NAME_ALICE), new Name(VALID_NAME_AMY));
+
+        assertEquals(actualNameSet, expectedNameSet);
+    }
+
+    @Test
+    public void parseMemberNames_collectionWithDuplicateMemberNames_returnsUniqueMemberNames() {
+        List<Name> actualNameList = ParserUtil.parseMemberNames(Arrays.asList(VALID_NAME_ALICE, VALID_NAME_ALICE));
+        List<Name> expectedNameList = Arrays.asList(new Name(VALID_NAME_ALICE));
+
+        assertEquals(actualNameList, expectedNameList);
     }
 }
