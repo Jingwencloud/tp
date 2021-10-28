@@ -23,20 +23,9 @@ public class Expense {
     private final List<Person> included;
     private final Map<Person, Cost> individualExpenses;
 
-    /**
-     * Constructs an {@code Expense}.
-     *
-     * @param payer of expense.
-     * @param cost of expense.
-     * @param description of expense.
-     */
-    public Expense(Person payer, Cost cost, Description description) {
-        this.payer = payer;
-        this.cost = cost;
-        this.description = description;
-        included = new ArrayList<>();
-        individualExpenses = new HashMap<>();
-    }
+    // data processed fields
+    private final Map<Person, Cost> splitExpenses;
+
 
     /**
      * Constructs an {@code Expense}.
@@ -47,18 +36,12 @@ public class Expense {
      * @param included Persons to be included into paying the expense.
      */
     public Expense(Person payer, Cost cost, Description description, List<Person> included) {
-        this.payer = payer;
-        this.cost = cost;
-        this.description = description;
-        this.included = included;
-        this.individualExpenses = new HashMap<>();
-        for (Person person : included) {
-            individualExpenses.put(person, new Cost(0));
-        }
+        this(payer, cost, description, included, new HashMap<>());
     }
 
     /**
      * Constructs an {@code Expense}.
+     *
      * @param payer of expense.
      * @param cost of expense.
      * @param description of expense.
@@ -72,14 +55,31 @@ public class Expense {
         this.description = description;
         this.included = included;
         this.individualExpenses = individualExpenses;
+        this.splitExpenses = new HashMap<>();
+
+        calculateSplitExpense();
     }
 
-    public Expense setIndividualExpenses(HashMap<Person, Cost> individualExpenses) {
-        return new Expense(payer, cost, description, included, individualExpenses);
+    /**
+     * Calculates the amount each person has to pay for this expense.
+     */
+    public void calculateSplitExpense() {
+        double toSplitAmount = cost.getCost();
+
+        for (Map.Entry<Person, Cost> entry : individualExpenses.entrySet()) {
+            splitExpenses.put(entry.getKey(), entry.getValue());
+            toSplitAmount -= entry.getValue().getCost();
+        }
+
+        toSplitAmount = toSplitAmount / (included.size() - individualExpenses.size());
+
+        for (Person person: included) {
+            splitExpenses.putIfAbsent(person, new Cost(toSplitAmount));
+        }
     }
 
-    public Expense setCost(Cost newCost) {
-        return new Expense(payer, newCost, description, included, individualExpenses);
+    public Map<Person, Cost> getSplitExpenses() {
+        return splitExpenses;
     }
 
     public Person getPayer() {
@@ -102,23 +102,37 @@ public class Expense {
         return individualExpenses;
     }
 
-    public Expense setIncluded(List<Person> included) {
-        List<Person> includedCopy = new ArrayList<>(this.included);
-        includedCopy.addAll(included);
-        return new Expense(payer, cost, description, includedCopy, individualExpenses);
-    }
-
     /**
      * Replaces the payee {@code target} with {@code editedPerson}.
      */
     public Optional<Expense> updatePerson(Person target, Person editedPerson) {
         requireAllNonNull(target, editedPerson);
 
+        Person payer = this.payer;
+        List<Person> included = new ArrayList<>(this.included);
+        Map<Person, Cost> individualExpenses = new HashMap<>();
+        individualExpenses.putAll(this.individualExpenses);
+        boolean isModified = false;
+
         if (payer.equals(target)) {
-            return Optional.of(new Expense(editedPerson, cost, description));
+            payer = editedPerson;
+            isModified = true;
         }
 
-        return Optional.ofNullable(null);
+        if (included.contains(target)) {
+            included.set(included.indexOf(target), editedPerson);
+            isModified = true;
+        }
+
+        Cost toAddBack = individualExpenses.remove(target);
+        if (!Objects.isNull(toAddBack)) {
+            individualExpenses.put(editedPerson, toAddBack);
+            isModified = true;
+        }
+
+        return isModified
+                ? Optional.ofNullable(new Expense(payer, cost, description, included, individualExpenses))
+                : Optional.empty();
     }
 
     @Override

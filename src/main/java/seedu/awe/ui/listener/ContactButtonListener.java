@@ -5,11 +5,11 @@ import javafx.event.EventHandler;
 import seedu.awe.ui.UiView;
 import seedu.awe.ui.ViewPanel;
 
-public class PersonButtonListener implements EventHandler<ActionEvent> {
+public class ContactButtonListener implements EventHandler<ActionEvent> {
 
     private ViewPanel viewPanel;
 
-    public PersonButtonListener(ViewPanel viewPanel) {
+    public ContactButtonListener(ViewPanel viewPanel) {
         this.viewPanel = viewPanel;
     }
 
@@ -21,6 +21,6 @@ public class PersonButtonListener implements EventHandler<ActionEvent> {
      */
     @Override
     public void handle(ActionEvent event) {
-        viewPanel.toggleView(UiView.ADDRESS_BOOK);
+        viewPanel.toggleView(UiView.CONTACT_PAGE);
     }
 }

@@ -1,6 +1,7 @@
 package seedu.awe.logic.parser;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPREMOVECONTACT_ERROR;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPREMOVECONTACT_USAGE;
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.awe.logic.commands.GroupRemoveContactCommand.MESSAGE_ERROR;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_GROUP_NAME;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_NAME;
 
@@ -47,7 +48,7 @@ public class GroupRemoveContactCommandParser implements Parser<GroupRemoveContac
         if (!ParserUtil.arePrefixesPresent(argMultimap, PREFIX_GROUP_NAME, PREFIX_NAME)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    GroupRemoveContactCommand.MESSAGE_USAGE));
+                    MESSAGE_GROUPREMOVECONTACT_USAGE));
         }
 
         GroupName groupName = ParserUtil.parseGroupName(argMultimap.getValue(PREFIX_GROUP_NAME).get());
@@ -74,7 +75,7 @@ public class GroupRemoveContactCommandParser implements Parser<GroupRemoveContac
                 addMemberToRemoveList(name);
             }
             if (!membersToBeRemovedNames.isEmpty() && membersToBeRemovedNames.isEmpty()) {
-                throw new ParseException(MESSAGE_ERROR);
+                throw new ParseException(MESSAGE_GROUPREMOVECONTACT_ERROR);
             }
             return membersToBeRemoved;
         } catch (IndexOutOfBoundsException e) {
@@ -97,7 +98,7 @@ public class GroupRemoveContactCommandParser implements Parser<GroupRemoveContac
             added = true;
         }
         if (!added) {
-            throw new ParseException(GroupRemoveContactCommand.MESSAGE_ERROR);
+            throw new ParseException(MESSAGE_GROUPREMOVECONTACT_ERROR);
         }
         return added;
     }

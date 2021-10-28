@@ -14,7 +14,7 @@ import seedu.awe.ui.UiPart;
 /**
  * A UI component that displays information of a {@code Person}.
  */
-public class PersonCard extends UiPart<Region> {
+public class ContactCard extends UiPart<Region> {
 
     private static final String FXML = "PersonListCard.fxml";
 
@@ -51,7 +51,7 @@ public class PersonCard extends UiPart<Region> {
      * Introduce addressbook here so that personCard can display group membership of each person without adding Group
      * as an attribute of Person class. Doing so prevents circular dependencies.
      */
-    public PersonCard(Person person, int displayedIndex, ReadOnlyAddressBook addressBook) {
+    public ContactCard(Person person, int displayedIndex, ReadOnlyAddressBook addressBook) {
         super(FXML);
         this.person = person;
         id.setText(displayedIndex + ". ");
@@ -73,12 +73,12 @@ public class PersonCard extends UiPart<Region> {
         }
 
         // instanceof handles nulls
-        if (!(other instanceof PersonCard)) {
+        if (!(other instanceof ContactCard)) {
             return false;
         }
 
         // state check
-        PersonCard card = (PersonCard) other;
+        ContactCard card = (ContactCard) other;
         return id.getText().equals(card.id.getText())
                 && person.equals(card.person);
     }

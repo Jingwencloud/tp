@@ -1,5 +1,6 @@
 package seedu.awe.logic.commands;
 
+import static seedu.awe.commons.core.Messages.MESSAGE_LISTCONTACTSCOMMAND_SUCCESS;
 import static seedu.awe.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.awe.logic.commands.CommandTestUtil.showPersonAtIndex;
 import static seedu.awe.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
@@ -28,20 +29,20 @@ public class ListContactsCommandTest {
 
     @Test
     public void execute_listIsNotFiltered_showsSameList() {
-        assertCommandSuccess(new ListContactsCommand(), model, ListContactsCommand.MESSAGE_SUCCESS,
+        assertCommandSuccess(new ListContactsCommand(), model, MESSAGE_LISTCONTACTSCOMMAND_SUCCESS,
                 expectedModel, false, true, false, false, false);
     }
 
     @Test
     public void execute_listIsFiltered_showsEverything() {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
-        assertCommandSuccess(new ListContactsCommand(), model, ListContactsCommand.MESSAGE_SUCCESS,
+        assertCommandSuccess(new ListContactsCommand(), model, MESSAGE_LISTCONTACTSCOMMAND_SUCCESS,
                 expectedModel, false, true, false, false, false);
     }
 
     @Test
     public void execute_showContacts_success() {
-        CommandResult expectedCommandResult = new CommandResult(ListContactsCommand.MESSAGE_SUCCESS,
+        CommandResult expectedCommandResult = new CommandResult(MESSAGE_LISTCONTACTSCOMMAND_SUCCESS,
                 false, false, false, true, false, false, false);
         assertCommandSuccess(new ListContactsCommand(), new ModelManager(), expectedCommandResult, new ModelManager());
     }

@@ -1,5 +1,7 @@
 package seedu.awe.logic.commands;
 
+import static seedu.awe.commons.core.Messages.MESSAGE_ADDCONTACTCOMMAND_DUPLICATE;
+import static seedu.awe.commons.core.Messages.MESSAGE_ADDCONTACTCOMMAND_SUCCESS;
 import static seedu.awe.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.awe.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.awe.testutil.TypicalPersons.getTypicalAddressBook;
@@ -33,13 +35,13 @@ public class AddContactCommandIntegrationTest {
         expectedModel.addPerson(validPerson);
 
         assertCommandSuccess(new AddContactCommand(validPerson), model,
-                String.format(AddContactCommand.MESSAGE_SUCCESS, validPerson), expectedModel);
+                String.format(MESSAGE_ADDCONTACTCOMMAND_SUCCESS, validPerson), expectedModel);
     }
 
     @Test
     public void execute_duplicatePerson_throwsCommandException() {
         Person personInList = model.getAddressBook().getPersonList().get(0);
-        assertCommandFailure(new AddContactCommand(personInList), model, AddContactCommand.MESSAGE_DUPLICATE_PERSON);
+        assertCommandFailure(new AddContactCommand(personInList), model, MESSAGE_ADDCONTACTCOMMAND_DUPLICATE);
     }
 
 }

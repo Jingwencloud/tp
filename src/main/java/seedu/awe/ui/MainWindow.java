@@ -23,15 +23,20 @@ import seedu.awe.logic.parser.exceptions.ParseException;
  * a menu bar and space where other JavaFX elements can be placed.
  */
 public class MainWindow extends UiPart<Stage> {
+    private static UiView viewEnum = UiView.CONTACT_PAGE;
 
     private static final String FXML = "MainWindow.fxml";
 
+    private static final String url = "images/awelogo.png";
+
     private final Logger logger = LogsCenter.getLogger(getClass());
+
 
     private Stage primaryStage;
     private Logic logic;
 
     // Independent Ui parts residing in this Ui container
+    private LogoDisplay logoDisplay;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
 
@@ -60,6 +65,9 @@ public class MainWindow extends UiPart<Stage> {
     @FXML
     private StackPane navigationButtonPlaceholder;
 
+    @FXML
+    private StackPane logoDisplayPlaceholder;
+
 
     /**
      * Creates a {@code MainWindow} with the given {@code Stage} and {@code Logic}.
@@ -85,6 +93,10 @@ public class MainWindow extends UiPart<Stage> {
 
     private void setAccelerators() {
         setAccelerator(helpMenuItem, KeyCombination.valueOf("F1"));
+    }
+
+    public static UiView getViewEnum() {
+        return viewEnum;
     }
 
     /**
@@ -124,6 +136,9 @@ public class MainWindow extends UiPart<Stage> {
         viewPanel = new ViewPanel(logic);
         viewPanelPlaceholder.getChildren().add(viewPanel.getRoot());
 
+        logoDisplay = new LogoDisplay(url);
+        logoDisplayPlaceholder.getChildren().add(logoDisplay.getRoot());
+
         navigationButtonPanel = new NavigationButtonPanel(viewPanel);
         navigationButtonPlaceholder.getChildren().add(navigationButtonPanel.getRoot());
 
@@ -161,8 +176,11 @@ public class MainWindow extends UiPart<Stage> {
         }
     }
 
-    void show() {
+    void show(boolean isDataError) {
         primaryStage.show();
+        if (isDataError) {
+            helpWindow.show();
+        }
     }
 
     /**
@@ -198,23 +216,28 @@ public class MainWindow extends UiPart<Stage> {
             }
 
             if (commandResult.isShowContacts()) {
-                viewPanel.toggleView(UiView.ADDRESS_BOOK);
+                viewEnum = UiView.CONTACT_PAGE;
+                viewPanel.toggleView(viewEnum);
             }
 
             if (commandResult.isShowGroups()) {
-                viewPanel.toggleView(UiView.GROUP_PAGE);
+                viewEnum = UiView.GROUP_PAGE;
+                viewPanel.toggleView(viewEnum);
             }
 
             if (commandResult.isShowExpenses()) {
-                viewPanel.toggleView(UiView.EXPENSE_PAGE);
+                viewEnum = UiView.EXPENSE_PAGE;
+                viewPanel.toggleView(viewEnum);
             }
 
             if (commandResult.isShowTransactionSummary()) {
-                viewPanel.toggleView(UiView.TRANSACTION_SUMMARY);
+                viewEnum = UiView.TRANSACTION_SUMMARY;
+                viewPanel.toggleView(viewEnum);
             }
 
             if (commandResult.isShowPaymentsCommand()) {
-                viewPanel.toggleView(UiView.PAYMENT_PAGE);
+                viewEnum = UiView.PAYMENT_PAGE;
+                viewPanel.toggleView(viewEnum);
             }
 
             return commandResult;

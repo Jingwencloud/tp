@@ -16,7 +16,7 @@ public class NavigationButtonPanel extends UiPart<Region> {
 
     // Buttons for toggling
     private GroupViewButton groupViewButton;
-    private PersonViewButton personViewButton;
+    private ContactViewButton contactViewButton;
 
     @FXML
     private StackPane personButtonPlaceholder;
@@ -39,8 +39,8 @@ public class NavigationButtonPanel extends UiPart<Region> {
         groupViewButton = new GroupViewButton(viewPanel);
         groupButtonPlaceholder.getChildren().add(groupViewButton.getRoot());
 
-        personViewButton = new PersonViewButton(viewPanel);
-        personButtonPlaceholder.getChildren().add(personViewButton.getRoot());
+        contactViewButton = new ContactViewButton(viewPanel);
+        personButtonPlaceholder.getChildren().add(contactViewButton.getRoot());
 
     }
 }

@@ -1,6 +1,8 @@
 package seedu.awe.logic.parser;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.awe.commons.core.Messages.MESSAGE_ADDEXPENSECOMMAND_NOT_PART_OF_GROUP;
+import static seedu.awe.commons.core.Messages.MESSAGE_ADDEXPENSECOMMAND_USAGE;
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_COST;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_DESCRIPTION;
@@ -19,7 +21,6 @@ import seedu.awe.model.Model;
 import seedu.awe.model.ReadOnlyAddressBook;
 import seedu.awe.model.expense.Cost;
 import seedu.awe.model.expense.Description;
-import seedu.awe.model.expense.Expense;
 import seedu.awe.model.group.GroupName;
 import seedu.awe.model.person.Name;
 import seedu.awe.model.person.Person;
@@ -56,7 +57,7 @@ public class AddExpenseCommandParser implements Parser<AddExpenseCommand> {
 
         if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_GROUP_NAME, PREFIX_COST, PREFIX_DESCRIPTION)
                 || !argMultimap.getPreamble().isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddExpenseCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_ADDEXPENSECOMMAND_USAGE));
         }
 
         List<Name> names = ParserUtil.parseNames(argMultimap.getAllValues(PREFIX_NAME));
@@ -66,22 +67,20 @@ public class AddExpenseCommandParser implements Parser<AddExpenseCommand> {
         List<Name> excludedNames = ParserUtil.parseExcluded(argMultimap.getAllValues(PREFIX_EXCLUDE));
 
         if (names.size() != costs.size()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddExpenseCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_ADDEXPENSECOMMAND_USAGE));
         }
 
         Person payer = getPayer(names);
 
         if (payer == null) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddExpenseCommand.MESSAGE_USAGE));
+            throw new ParseException(MESSAGE_ADDEXPENSECOMMAND_NOT_PART_OF_GROUP);
         }
 
         Cost totalCost = getTotalCost(costs);
         ArrayList<Person> namesAsPersons = namesToPerson(names);
         List<Person> toExclude = findExcluded(excludedNames);
 
-        Expense expense = new Expense(payer, totalCost, description);
-
-        return new AddExpenseCommand(expense, groupName, namesAsPersons, costs, toExclude);
+        return new AddExpenseCommand(payer, totalCost, description, groupName, namesAsPersons, costs, toExclude);
     }
 
     private List<Person> findExcluded(List<Name> toExclude) {

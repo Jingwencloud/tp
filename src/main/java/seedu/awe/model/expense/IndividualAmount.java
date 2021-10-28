@@ -14,7 +14,7 @@ public class IndividualAmount {
      * @param person person to whom expenditure is attached.
      * @param expenditure expenditure attached to person.
      */
-    public IndividualAmount(Person person, Double expenditure) {
+    public IndividualAmount(Person person, double expenditure) {
         requireAllNonNull(person, expenditure);
         this.person = person;
         this.expenditure = expenditure;
@@ -28,4 +28,19 @@ public class IndividualAmount {
         return expenditure;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        } else if (!(other instanceof IndividualAmount)) {
+            return false;
+        }
+
+        IndividualAmount individualAmount = (IndividualAmount) other;
+
+        boolean isEqualExpenditure = this.expenditure.equals(individualAmount.getExpenditure());
+        boolean isSamePerson = this.person.equals(individualAmount.getPerson());
+
+        return isEqualExpenditure && isSamePerson;
+    }
 }

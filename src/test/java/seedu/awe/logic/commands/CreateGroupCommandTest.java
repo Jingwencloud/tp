@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.awe.commons.core.Messages.MESSAGE_CREATEGROUPCOMMAND_DUPLICATE_GROUP;
+import static seedu.awe.commons.core.Messages.MESSAGE_CREATEGROUPCOMMAND_SUCCESS;
 import static seedu.awe.testutil.Assert.assertThrows;
 
 import java.nio.file.Path;
@@ -50,9 +52,10 @@ public class CreateGroupCommandTest {
         ArrayList<Person> members = builder.getValidMembers();
         Group groupAdded = new Group(bali, members);
 
-        CommandResult commandResult = new CreateGroupCommand(bali, members, true, new HashSet<>()).execute(modelStub);
+        CommandResult commandResult = new CreateGroupCommand(bali, members, true, new HashSet<>())
+                .execute(modelStub);
 
-        assertEquals(CreateGroupCommand.MESSAGE_SUCCESS, commandResult.getFeedbackToUser());
+        assertEquals(MESSAGE_CREATEGROUPCOMMAND_SUCCESS, commandResult.getFeedbackToUser());
         assertEquals(Arrays.asList(groupAdded), modelStub.groupsAdded);
     }
 
@@ -65,7 +68,7 @@ public class CreateGroupCommandTest {
         CreateGroupCommand createGroupCommand = new CreateGroupCommand(bali, members, true, new HashSet<>());
         ModelStub modelStub = new ModelStubWithGroup(validGroup);
 
-        assertThrows(CommandException.class, CreateGroupCommand.MESSAGE_DUPLICATE_GROUP, () ->
+        assertThrows(CommandException.class, MESSAGE_CREATEGROUPCOMMAND_DUPLICATE_GROUP, () ->
                         createGroupCommand.execute(modelStub));
     }
 
@@ -144,6 +147,11 @@ public class CreateGroupCommandTest {
         }
 
         @Override
+        public Group getActiveGroupFromAddressBook() throws CommandException {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public boolean hasPerson(Person person) {
             throw new AssertionError("This method should not be called.");
         }
@@ -190,8 +198,9 @@ public class CreateGroupCommandTest {
 
         @Override
         public void setPayments(List<Payment> payments) {
-
+            throw new AssertionError("This method should not be called.");
         }
+
 
         /**
          * Returns an unmodifiable view of the list of {@code Group} backed by the internal list of
@@ -204,7 +213,6 @@ public class CreateGroupCommandTest {
 
         @Override
         public void updateFilteredGroupList(Predicate<Group> predicate) {
-            throw new AssertionError("This method should not be called.");
         }
 
         @Override
@@ -255,6 +263,16 @@ public class CreateGroupCommandTest {
         @Override
         public ObservableList<TransactionSummary> getTransactionSummary() {
             throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean isCurrentExpenseList(Group group) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Expense getExpense(int index) {
+            return null;
         }
     }
 

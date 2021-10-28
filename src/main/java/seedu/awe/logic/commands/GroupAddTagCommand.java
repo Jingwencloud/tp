@@ -1,5 +1,8 @@
 package seedu.awe.logic.commands;
 import static java.util.Objects.requireNonNull;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPADDTAGCOMMAND_DUPLICATE_TAG;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPADDTAGCOMMAND_SUCCESS;
+import static seedu.awe.commons.core.Messages.MESSAGE_NONEXISTENT_GROUP;
 import static seedu.awe.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Objects;
@@ -13,10 +16,6 @@ import seedu.awe.model.tag.Tag;
 
 public class GroupAddTagCommand extends Command {
     public static final String COMMAND_WORD = "groupaddtag";
-    public static final String MESSAGE_SUCCESS = "New tag(s) added to group";
-    public static final String MESSAGE_DUPLICATE_TAG = "%1$s is already in the group";
-    public static final String MESSAGE_USAGE = "groupaddtag gn/[GROUPNAME] n/[TAG1] n/[OPTIONAL TAG2]";
-    public static final String MESSAGE_NONEXISTENT_GROUP = "Group %1$s does not exist.";
 
     private final GroupName groupName;
     private final Set<Tag> newTags;
@@ -88,16 +87,16 @@ public class GroupAddTagCommand extends Command {
         if (Objects.isNull(oldGroup)) {
             throw new CommandException(String.format(MESSAGE_NONEXISTENT_GROUP, groupName));
         }
+
         Set<Tag> tagsFromOldGroup = oldGroup.getTags();
         for (Tag tag : newTags) {
             if (tagsFromOldGroup.contains(tag)) {
-                throw new CommandException(String.format(MESSAGE_DUPLICATE_TAG, tag.getTagName()));
+                throw new CommandException(String.format(MESSAGE_GROUPADDTAGCOMMAND_DUPLICATE_TAG, tag.getTagName()));
             }
         }
-        newTags.addAll(tagsFromOldGroup);
-        Group newGroup = new Group(groupName, oldGroup.getMembers(), newTags);
+        Group newGroup = oldGroup.addTag(newTags);
         model.setGroup(oldGroup, newGroup);
-        return new CommandResult(MESSAGE_SUCCESS);
+        return new CommandResult(MESSAGE_GROUPADDTAGCOMMAND_SUCCESS);
     }
 
     @Override

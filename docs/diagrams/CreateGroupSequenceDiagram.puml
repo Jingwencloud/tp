@@ -3,9 +3,8 @@
 
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
-participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
-participant ":CreateGroupCommandParser" as CreateGroupCommandParser LOGIC_COLOR
-participant "createGroupCommand:CreateGroupCommand" as CreateGroupCommand LOGIC_COLOR
+participant ":AweParser" as AweParser LOGIC_COLOR
+participant ":CreateGroupCommand" as CreateGroupCommand LOGIC_COLOR
 participant ":CommandResult" as CommandResult LOGIC_COLOR
 end box
 
@@ -13,37 +12,20 @@ box Model MODEL_COLOR_T1
 participant ":Model" as Model MODEL_COLOR
 end box
 
-[-> LogicManager : execute("creategroup gn/GROUP_NAME n/NAME")
+[-> LogicManager : execute("creategroup gn/Bali n/Tom")
 activate LogicManager
 
-LogicManager -> AddressBookParser : parseCommand("creategroup gn/GROUP_NAME n/NAME")
-activate AddressBookParser
+LogicManager -> AweParser : parseCommand("creategroup gn/Bali n/Tom")
+activate AweParser
 
-create CreateGroupCommandParser
-AddressBookParser -> CreateGroupCommandParser
-activate CreateGroupCommandParser
-
-CreateGroupCommandParser --> AddressBookParser
-deactivate CreateGroupCommandParser
-
-AddressBookParser -> CreateGroupCommandParser : parse("gn/GROUP_NAME")
-activate CreateGroupCommandParser
-
+/'Clarify with tutor if there is a need to display CreateGroupCommandParser class within the ref'/
+ref over AweParser, CreateGroupCommand:get createGroupCommand
 create CreateGroupCommand
-CreateGroupCommandParser -> CreateGroupCommand
-activate CreateGroupCommand
+AweParser -> CreateGroupCommand
 
-CreateGroupCommand --> CreateGroupCommandParser : createGroupCommand
-deactivate CreateGroupCommand
 
-CreateGroupCommandParser --> AddressBookParser : createGroupCommand
-deactivate CreateGroupCommandParser
-'Hidden arrow to position the destroy marker below the end of the activation bar.
-CreateGroupCommandParser -[hidden]-> AddressBookParser
-destroy CreateGroupCommandParser
-
-AddressBookParser --> LogicManager : createGroupCommand
-deactivate AddressBookParser
+AweParser --> LogicManager : createGroupCommand
+deactivate AweParser
 
 LogicManager -> CreateGroupCommand : execute()
 activate CreateGroupCommand

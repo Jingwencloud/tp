@@ -7,6 +7,7 @@ import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.awe.commons.core.GuiSettings;
+import seedu.awe.logic.commands.exceptions.CommandException;
 import seedu.awe.model.expense.Cost;
 import seedu.awe.model.expense.Expense;
 import seedu.awe.model.group.Group;
@@ -63,8 +64,11 @@ public interface Model {
      */
     void setAddressBook(ReadOnlyAddressBook addressBook);
 
-    /** Returns the AddressBook */
+    /** Returns the AddressBook. */
     ReadOnlyAddressBook getAddressBook();
+
+    /** Returns the group of the ExpenseList in AddressBook. */
+    Group getActiveGroupFromAddressBook() throws CommandException;
 
     /**
      * Returns true if a person with the same identity as {@code person} exists in the awe book.
@@ -160,6 +164,10 @@ public interface Model {
     ObservableList<Expense> getExpenses();
 
     void setExpenses(Group group);
+
+    boolean isCurrentExpenseList(Group group);
+
+    Expense getExpense(int index);
 
     /**
      * Updates the filter of the filtered expense list to filter by the given {@code predicate}.

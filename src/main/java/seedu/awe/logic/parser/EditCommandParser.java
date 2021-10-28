@@ -1,6 +1,8 @@
 package seedu.awe.logic.parser;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.awe.commons.core.Messages.MESSAGE_EDITCONTACTCOMMAND_NOT_EDITED;
+import static seedu.awe.commons.core.Messages.MESSAGE_EDITCONTACTCOMMAND_USAGE;
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_EMAIL;
@@ -38,9 +40,9 @@ public class EditCommandParser implements Parser<EditContactCommand> {
 
         try {
             index = ParserUtil.parseIndex(argMultimap.getPreamble());
-        } catch (ParseException pe) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    EditContactCommand.MESSAGE_USAGE), pe);
+        } catch (ParseException parseException) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_EDITCONTACTCOMMAND_USAGE),
+                    parseException);
         }
 
         EditPersonDescriptor editPersonDescriptor = new EditPersonDescriptor();
@@ -59,7 +61,7 @@ public class EditCommandParser implements Parser<EditContactCommand> {
         parseTagsForEdit(argMultimap.getAllValues(PREFIX_TAG)).ifPresent(editPersonDescriptor::setTags);
 
         if (!editPersonDescriptor.isAnyFieldEdited()) {
-            throw new ParseException(EditContactCommand.MESSAGE_NOT_EDITED);
+            throw new ParseException(MESSAGE_EDITCONTACTCOMMAND_NOT_EDITED);
         }
 
         return new EditContactCommand(index, editPersonDescriptor);

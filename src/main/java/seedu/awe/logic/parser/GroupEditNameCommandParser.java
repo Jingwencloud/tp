@@ -1,5 +1,6 @@
 package seedu.awe.logic.parser;
 
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPEDITNAMECOMMAND_USAGE;
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_GROUP_NAME;
 
@@ -26,7 +27,7 @@ public class GroupEditNameCommandParser implements Parser<GroupEditNameCommand> 
         if (!ParserUtil.arePrefixesPresent(argMultimap, PREFIX_GROUP_NAME)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    GroupEditNameCommand.MESSAGE_USAGE));
+                    MESSAGE_GROUPEDITNAMECOMMAND_USAGE));
         }
 
         List<GroupName> groupNamesList = ParserUtil.parseGroupNames(argMultimap.getAllValues(PREFIX_GROUP_NAME));
@@ -36,7 +37,7 @@ public class GroupEditNameCommandParser implements Parser<GroupEditNameCommand> 
 
         if (groupNamesList.size() > 2) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    GroupEditNameCommand.MESSAGE_USAGE));
+                    MESSAGE_GROUPEDITNAMECOMMAND_USAGE));
         }
 
         try {
@@ -44,7 +45,7 @@ public class GroupEditNameCommandParser implements Parser<GroupEditNameCommand> 
             newGroupName = groupNamesList.get(1);
         } catch (IndexOutOfBoundsException exception) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    GroupEditNameCommand.MESSAGE_USAGE));
+                    MESSAGE_GROUPEDITNAMECOMMAND_USAGE));
         }
 
         boolean isValidCommand = true;

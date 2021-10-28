@@ -1,5 +1,6 @@
 package seedu.awe.logic.parser;
 
+import static seedu.awe.commons.core.Messages.MESSAGE_ADDCONTACTCOMMAND_USAGE;
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_EMAIL;
@@ -22,7 +23,7 @@ import seedu.awe.model.tag.Tag;
 /**
  * Parses input arguments and creates a new AddCommand object
  */
-public class AddCommandParser implements Parser<AddContactCommand> {
+public class AddContactCommandParser implements Parser<AddContactCommand> {
 
     /**
      * Parses the given {@code String} of arguments in the context of the AddCommand
@@ -35,7 +36,7 @@ public class AddCommandParser implements Parser<AddContactCommand> {
 
         if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_ADDRESS, PREFIX_PHONE, PREFIX_EMAIL)
                 || !argMultimap.getPreamble().isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddContactCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_ADDCONTACTCOMMAND_USAGE));
         }
 
         Name name = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());

@@ -1,4 +1,5 @@
 package seedu.awe.logic.parser;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPADDTAGCOMMAND_USAGE;
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_GROUP_NAME;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_TAG;
@@ -29,7 +30,7 @@ public class GroupAddTagCommandParser implements Parser<GroupAddTagCommand> {
         if (!ParserUtil.arePrefixesPresent(argMultimap, PREFIX_GROUP_NAME, PREFIX_TAG)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    GroupAddTagCommand.MESSAGE_USAGE));
+                    MESSAGE_GROUPADDTAGCOMMAND_USAGE));
         }
 
         GroupName groupName = ParserUtil.parseGroupName(argMultimap.getValue(PREFIX_GROUP_NAME).get());

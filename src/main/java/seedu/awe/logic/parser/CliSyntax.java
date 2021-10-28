@@ -14,6 +14,5 @@ public class CliSyntax {
     public static final Prefix PREFIX_GROUP_NAME = new Prefix("gn/");
     public static final Prefix PREFIX_COST = new Prefix("$/");
     public static final Prefix PREFIX_DESCRIPTION = new Prefix("d/");
-    public static final Prefix PREFIX_INDEX = new Prefix("i/");
     public static final Prefix PREFIX_EXCLUDE = new Prefix("ex/");
 }

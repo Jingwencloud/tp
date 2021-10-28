@@ -13,11 +13,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import seedu.awe.logic.commands.exceptions.CommandException;
 import seedu.awe.model.expense.Expense;
 import seedu.awe.model.group.Group;
 import seedu.awe.model.group.GroupName;
@@ -110,6 +112,11 @@ public class AddressBookTest {
         }
 
         @Override
+        public Optional<Group> getGroupFromExpenseList() throws CommandException {
+            return Optional.empty();
+        }
+
+        @Override
         public ObservableList<Payment> getPaymentList() {
             return payments;
         }
@@ -130,7 +137,7 @@ public class AddressBookTest {
 
         @Override
         public void setPayments(List<Payment> payments) {
-           // EMPTY METHOD
+
         }
     }
 

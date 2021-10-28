@@ -1,8 +1,9 @@
 package seedu.awe.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.awe.logic.parser.CliSyntax.PREFIX_GROUP_NAME;
-import static seedu.awe.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.awe.commons.core.Messages.MESSAGE_DELETEGROUPCOMMAND_GROUP_DOES_NOT_EXIST;
+import static seedu.awe.commons.core.Messages.MESSAGE_DELETEGROUPCOMMAND_SUCCESS;
+import static seedu.awe.model.Model.PREDICATE_SHOW_ALL_GROUPS;
 
 import seedu.awe.logic.commands.exceptions.CommandException;
 import seedu.awe.model.Model;
@@ -10,11 +11,7 @@ import seedu.awe.model.group.Group;
 
 public class DeleteGroupCommand extends Command {
     public static final String COMMAND_WORD = "deletegroup";
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": deletes a group from the awe book. "
-            + "Parameters: "
-            + PREFIX_GROUP_NAME + "GROUP_NAME ";
-    public static final String MESSAGE_SUCCESS = "Group %s with %d member(s) deleted";
-    public static final String MESSAGE_GROUP_DOES_NOT_EXIST = "This group does not exist in the awe book";
+
 
     private Group group;
 
@@ -41,7 +38,7 @@ public class DeleteGroupCommand extends Command {
         requireNonNull(model);
 
         if (!model.hasGroup(group)) {
-            throw new CommandException(MESSAGE_GROUP_DOES_NOT_EXIST);
+            throw new CommandException(MESSAGE_DELETEGROUPCOMMAND_GROUP_DOES_NOT_EXIST);
         }
 
         Group groupFromInternalList = model.getGroupByName(group.getGroupName());
@@ -49,8 +46,9 @@ public class DeleteGroupCommand extends Command {
         model.setAllMembersOfGroup(groupFromInternalList);
         int numberOfMembers = groupFromInternalList.getMembers().size();
         String groupName = groupFromInternalList.getGroupName().getName();
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, groupName, numberOfMembers));
+        model.updateFilteredGroupList(PREDICATE_SHOW_ALL_GROUPS);
+        return new CommandResult(String.format(MESSAGE_DELETEGROUPCOMMAND_SUCCESS, groupName, numberOfMembers),
+                false, false, true, false, false, false, false);
     }
 
     @Override

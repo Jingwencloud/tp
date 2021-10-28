@@ -57,7 +57,7 @@ public class JsonAdaptedExpense {
                 .collect(Collectors.toList()));
         Map<Person, Cost> individualExpenses = source
                 .getIndividualExpenses();
-        List<IndividualAmount> individualAmounts = StorageUtils
+        List<IndividualAmount> individualAmounts = StorageUtil
                 .convertExpenseMapToListOfIndividualAmounts(individualExpenses);
         this.individualExpenses.addAll(individualAmounts
                 .stream()
@@ -95,7 +95,7 @@ public class JsonAdaptedExpense {
         }
         final Description modelDescription = new Description(description);
 
-        Map<Person, Cost> individualExpenses = StorageUtils
+        Map<Person, Cost> individualExpenses = StorageUtil
                 .convertListOfJsonAdaptedIndividualAmountsToExpenseMap(this.individualExpenses);
 
         return new Expense(modelPayer, modelCost, modelDescription, modelIncluded, individualExpenses);

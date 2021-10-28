@@ -2,6 +2,7 @@ package seedu.awe.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.awe.commons.core.Messages.MESSAGE_LISTEXPENSESCOMMAND_USAGE;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_GROUP_NAME;
 
 import java.util.stream.Stream;
@@ -31,7 +32,7 @@ public class ListExpensesCommandParser implements Parser<ListExpensesCommand> {
 
         if (!arePrefixesPresent(argMultimap, PREFIX_GROUP_NAME)
                 || !argMultimap.getPreamble().isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListExpensesCommand.MESSAGE_USAGE));
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_LISTEXPENSESCOMMAND_USAGE));
         }
 
         try {
@@ -39,7 +40,7 @@ public class ListExpensesCommandParser implements Parser<ListExpensesCommand> {
             return new ListExpensesCommand(groupName);
         } catch (IllegalValueException ive) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    ListExpensesCommand.MESSAGE_USAGE), ive);
+                    MESSAGE_LISTEXPENSESCOMMAND_USAGE), ive);
         }
     }
 

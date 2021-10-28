@@ -3,17 +3,69 @@ layout: page
 title: User Guide
 ---
 
-Around the World in $80 (AWE) is a **desktop app for spiting expenses on trip, optimized for use via a Command Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AWE can get your contact management tasks done faster than traditional GUI apps.
+Around the World in $80 (AWE) is a desktop app for keeping track of spending and expenditure during travels, splitting 
+expenses with travel-mates, and facilitating easy recollection of debts at the end of every trip. AWE is the world's
+only bespoke app designed for group travellers.
 
-AWE promises to revolutionises the group-travel space. With AWE, bills can be split and monitored in a centralised manner that minimises the potential for disputes and maximises the efficiency of payment and recollection of debts.
+The app promises to revolutionise the group-travel space. With AWE, bills can be split and monitored in a centralised
+manner that minimises the potential for disputes and maximises the efficiency of payment and recollection of debts.
 
-
-* Table of Contents
-{:toc}
+AWE's vision is a more interconnected world where relationships are more easily built and maintained.
+Our mission is to accomplish through a user-centric approach that seeks to provide the user with what they need, at the
+tip of their fingertips. This document marks the first step towards the accomplishment of that mission, and the
+beginning of your journey around the world.
 
 --------------------------------------------------------------------------------------------------------------------
+<div style="page-break-after: always;"></div>
+<p style="font-size: 1.75rem; margin-top: 60px; color: #e46c0a; font-weight:400; margin-bottom: 15px;">Table of Contents</p>
+* Table of Contents
+{:toc}
+--------------------------------------------------------------------------------------------------------------------
+<div style="page-break-after: always;"></div>
 
-## 1. Quick start
+## 1. About the Document
+
+The purpose of this document is to make sure that you have a pleasant and intuitive experience when using our app.
+In line with our user-centric approach, the guide is structured to ensure that the knowledge of the workings of our app
+is easily accessible.
+The document serves as a guide for users to understand the way to use our app to extract maximum satisfaction.
+
+**To accomplish this, we have taken the following steps**
+* We provide you with a glossary of contents to explain away some vocabulary that you might find confusing, so that you 
+can focus on exploring AWE to the full extent of its functionalities.
+* We provide you with the tools to be able to read this guide with little need for re-referencing previous sections.
+
+Section 1 provides readers with a brief overview of how to use this document. Section 2 details the setting up of AWE
+and Section 3 documents the main features of AWE. If you still face problems using AWE, refer to our FAQ in Section 4. 
+For a summary of all the commands available, refer to Section 5.
+
+<div style="page-break-after: always;"></div>
+
+### 1.1 Glossary
+
+Term | Explanation
+--------|------------------
+**Command Line Interface (CLI)** | The Command Line Interface, or CLI for short, is the user interface on which AWE is based. This means that most of AWE's functionality is unlocked by the typing of inputs by the user, rather than the clicking of a mouse or the selection of options via a menu.
+**Graphical User Interface (GUI)** | The Graphical User Interface, or GUI for short, is a user interface which supports all of its features through the clicking of a mouse or the selection of options via a menu. It does not require users to type in commands.
+**Command** | Commands are the user inputs that trigger the specific features of the app. Commands are often denoted in highlighted letters. For instance, to create a group, the `creategroup` command is utilised. 
+**Parameter** | A Parameter refers to a specific detail required for a command. For instance, adding a person within an app would require a details such as the person's name. In this case, the name is a parameter of this command. Parameters are often denoted in the guide in highlighted uppercase letters, for eg. `NAME`.
+
+### 1.2 Format of commands
+If you wish to jump straight into using our features, refer to Section 5 for the summary of commands.
+Here are some pointers to take note of.
+1. Words in `UPPER_CASE` are parameters to be supplied by you.
+2. Words that are enclosed in `[   ]` denote optional parameters that the user can choose to enter or leave out.
+3. You will notice that our commands require you to use characters such as `e/`, `t/`, etc. This is allows our programme
+to locate which words belong to which category of input.
+
+
+--------------------------------------------------------------------------------------------------------------------
+<div style="page-break-after: always;"></div>
+
+## 2. Quick start
+AWE's primary asset is its speed. Unlike traditional Graphic User Interfaces (GUIs) which rely on slow actions such as mouse clicking and selection of options from long menus, with its CLI, AWE offers users the benefit of speed.
+For those who type fast, the app will be faster than most mainstream contact management apps.
+For those who are not as fast, familiarity with the commands over time will allow you to harness the full capabilities of AWE.
 
 1. Ensure you have Java `11` or above installed in your Computer. 
 
@@ -22,7 +74,9 @@ AWE promises to revolutionises the group-travel space. With AWE, bills can be sp
 3. Copy the file to the folder you want to use as the _home folder_ for your tp.
 
 4. Double-click the file to start the app. The GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
-   ![Ui](images/AWEUi.png)
+   ![Ui](images/AweUi.png)
+   
+<div style="page-break-after: always;"></div>
 
 5. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
    Some example commands you can try:
@@ -33,7 +87,7 @@ AWE promises to revolutionises the group-travel space. With AWE, bills can be sp
 
    * **`expenses`** : The command `expenses` lists all expenses in a particular group.
      
-   * **`addcontact`** : The command `addcontact n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` adds a contact named `John Doe` to the Address Book.
+   * **`addcontact`** : The command `addcontact n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` adds a contact named `John Doe` to AWE.
 
    * **`deletecontact`** : The command `deletecontact 3` removes the 3rd contact shown in the current list.
 
@@ -43,7 +97,9 @@ AWE promises to revolutionises the group-travel space. With AWE, bills can be sp
    
    * **`addexpense`** : The command `addexpense n/Alex Yeoh gn/Bali $/50 d/drinks` adds an expense paid for by `Alex Yeoh` into the group `Bali` of `$50` for `drinks`.
 
-   * **`deleteexpense`** : The command `deleteexpense gn/Bali i/1` removes the 1st expense (by one-based-index) from the list of expenses for the group named Bali.
+   * **`deleteexpense`** : The command `deleteexpense 1` removes the 1st expense (by one-based-index) from the list of expenses visible to the user.
+   
+   * **`transactionsummary `** : The command `transactionsummary  gn/Bali` provides a list of spending made by each user in the group named Bali.
 
    * **`calculatepayments`** : The command `calculatepayments gn/Bali` provides a list of payments to be made between users to settle debts for the group named Bali.
 
@@ -56,8 +112,9 @@ AWE promises to revolutionises the group-travel space. With AWE, bills can be sp
 6. Refer to the [Features](#features) below for details of each command.
 
 --------------------------------------------------------------------------------------------------------------------
+<div style="page-break-after: always;"></div>
 
-## 2. Features
+## 3. Features
 
 <div markdown="block" class="alert alert-info">
 
@@ -83,17 +140,20 @@ AWE promises to revolutionises the group-travel space. With AWE, bills can be sp
 
 </div>
 
-### 2.1. Contacts
+--------------------------------------------------------------------------------------------------------------------
+<div style="page-break-after: always;"></div>
 
-### 2.1.1. Listing all contacts : `contacts`
+### 3.1. Contacts
 
-Shows a list of all contacts in address book.
+#### 3.1.1. Listing all contacts : `contacts`
+
+Shows a list of all contacts in AWE.
 
 Format: `contacts`
 
-### 2.1.2. Adding a person: `addcontact`
+#### 3.1.2. Adding a person: `addcontact`
 
-Adds a person to the address book.
+Adds a person to AWE.
 
 Format: `addcontact n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
 
@@ -105,9 +165,9 @@ Examples:
 * `addcontact n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
 * `addcontact n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
 
-### 2.1.3. Editing a person : `editcontact`
+#### 3.1.3. Editing a person : `editcontact`
 
-Edits an existing person in the address book.
+Edits an existing person in AWE.
 
 Format: `editcontact INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
 
@@ -122,9 +182,9 @@ Examples:
 *  `editcontact 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
 *  `editcontact 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
-### 2.1.4. Deleting a person : `deletecontact`
+#### 3.1.4. Deleting a person : `deletecontact`
 
-Deletes the specified person from the address book.
+Deletes the specified person from AWE.
 
 Format: `deletecontact INDEX`
 
@@ -133,10 +193,10 @@ Format: `deletecontact INDEX`
 * The index **must be a positive integer** 1, 2, 3, …​
 
 Examples:
-* `persons` followed by `deletecontact 2` deletes the 2nd person in the address book.
+* `persons` followed by `deletecontact 2` deletes the 2nd person in AWE.
 * `find Betsy` followed by `deletecontact 1` deletes the 1st person in the results of the `find` command.
 
-### 2.1.5. Locating a person by name: `findcontacts`
+#### 3.1.5. Locating a person by name: `findcontacts`
 
 Finds persons whose names contain any of the given keywords.
 
@@ -154,16 +214,19 @@ Examples:
 * `findcontacts alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
 
-### 2.2. Groups
+--------------------------------------------------------------------------------------------------------------------
+<div style="page-break-after: always;"></div>
 
-### 2.2.1. Listing all groups : `groups`
+### 3.2. Groups
+
+#### 3.2.1. Listing all groups : `groups`
 
 Shows a list of all groups in GroupPage.
 
 Format: `groups`
 
-### 2.2.2. Creating a travel group: ```creategroup```
-Creates a group of people of your choice from your address book.
+#### 3.2.2. Creating a travel group: ```creategroup```
+Creates a group of people of your choice from AWE.
 Adds you as a member of the group by default.
 
 Format: `creategroup gn/GROUP_NAME n/NAME1 [n/NAME2] [n/NAME3]...[t/TAG1]`
@@ -171,15 +234,15 @@ Format: `creategroup gn/GROUP_NAME n/NAME1 [n/NAME2] [n/NAME3]...[t/TAG1]`
 * GROUP_NAME is a mandatory field.
 * A group with the same name as GROUP_NAME cannot exist for the creation of a group through this command. 
 * At least one NAME is necessary.
-* The names are required to be in the address book and should match contact names exactly.
+* The names are required to be in AWE and should match contact names exactly.
 * Tags cannot have whitespace and special characters other than alphanumeric characters.
 * Tags are optional.
 
 Examples:
-* creategroup gn/Bali n/Jacob Tan n/Max Chia n/Julianne Tay
-* creategroup gn/London n/Justin Lee n/Raj Gopal n/Keith Chia
+* `creategroup gn/Bali n/Jacob Tan n/Max Chia n/Julianne Tay`
+* `creategroup gn/London n/Justin Lee n/Raj Gopal n/Keith Chia`
 
-### 2.2.3. Deleting a travel group: `deletegroup`
+#### 3.2.3. Deleting a travel group: `deletegroup`
 Deletes a group from your groups.
 All the details from the group are lost once this action is completed.
 
@@ -192,7 +255,7 @@ Examples:
 * `deletegroup gn/Bali`
 * `deletegroup gn/London`
 
-### 2.2.4. Locating group by name: `findgroups`
+#### 3.2.4. Locating group by name: `findgroups`
 
 Find groups whose names contain any of the given keywords.
 
@@ -210,11 +273,15 @@ Examples:
 * `findgroups Taiwan Malaysia` returns `Taiwan` `Malaysia`<br>
   ![result for 'findcontacts Taiwan Malaysia'](images/findAlexDavidResult.png)
 
-### 2.2.5. Adding a contact to an existing group: `groupaddcontact`
+<div markdown="span" class="alert alert-primary">
+
+:bulb: **Tip:** You can search for multiple groups by entering more keywords.</div>
+
+#### 3.2.5. Adding a contact to an existing group: `groupaddcontact`
 
 Add contact in contact list into an existing travel group.
 
-Format: `groupaddcontact gn/[GROUP_NAME] n/[CONTACT_NAME1] n/[OPTIONAL_CONTACT_NAME2] ...`
+Format: `groupaddcontact gn/GROUP_NAME n/CONTACT_NAME1 [n/CONTACT_NAME2] ...`
 
 * Group name in the user input must already be an existing group.
 * The search is case-sensitive. e.g `hans` will not match `Hans`
@@ -228,11 +295,11 @@ Examples:
 * `groupaddcontact gn/Prague n/Bernice Yu n/David Li n/Alex Yeoh` to add Bernice Yu, David Li, and Alex Yeoh into the
 Prague travel group.
 
-### 2.2.6. Removing a contact from an existing group: `groupremovecontact`
+#### 3.2.6. Removing a contact from an existing group: `groupremovecontact`
 
 Remove contact in contact list from an existing travel group.
 
-Format: `groupremovecontact gn/[GROUP_NAME] n/[CONTACT_NAME1] n/[OPTIONAL_CONTACT_NAME2] ...`
+Format: `groupremovecontact gn/GROUP_NAME n/CONTACT_NAME [n/CONTACT_NAME] ...`
 
 * Group name in the user input must already be an existing group.
 * The search is case-sensitive. e.g `hans` will not match `Hans`
@@ -246,11 +313,11 @@ Examples:
 * `groupremovecontact gn/Prague n/Bernice Yu n/David Li n/Alex Yeoh` to remove Bernice Yu, David Li, and Alex Yeoh
 from the Prague travel group.
 
-### 2.2.7. Adding a tag to an existing group: `groupaddtag`
+#### 3.2.7. Adding a tag to an existing group: `groupaddtag`
 
 Add tag for an existing travel group.
 
-Format: `groupaddtag gn/[GROUP_NAME] t/[TAG1] t/[OPTIONAL_TAG2] ...`
+Format: `groupaddtag gn/GROUP_NAME t/TAG [t/TAG2] ...`
 
 * Group name in the user input must already be an existing group.
 * The search is case-sensitive. e.g `bali` will not match `Bali`
@@ -262,11 +329,11 @@ Examples:
 * `groupaddtag gn/Prague t/Family t/Cousins` to indicate that the Prague travel group is with family,
 more specifically, cousins.
 
-### 2.2.8. Removing a tag from an existing group: `groupremovetag`
+#### 3.2.8. Removing a tag from an existing group: `groupremovetag`
 
 Remove tag from an existing travel group.
 
-Format: `groupremovetag gn/[GROUP_NAME] t/[TAG1] t/[OPTIONAL_TAG2] ...`
+Format: `groupremovetag gn/GROUP_NAME t/TAG [t/TAG2] ...`
 
 * Group name in the user input must already be an existing group.
 * Tag has to be in existing group before it can be removed.
@@ -278,11 +345,11 @@ Examples:
 * `groupremovetag gn/Bali t/Friends` to remove the friends tag from the Bali travel group.
 * `groupremovetag gn/Prague t/Family t/Cousins` to the tags family and cousins from the Prague travel group.
 
-### 2.2.9. Editing travel group name: `groupeditname`
+#### 3.2.9. Editing travel group name: `groupeditname`
 
 Edit group name for an existing travel group.
 
-Format: `groupeditname gn/[OLD_GROUP_NAME] gn/[NEW_GROUP_NAME]`
+Format: `groupeditname gn/OLD_GROUP_NAME gn/NEW_GROUP_NAME`
 
 * Group name in the user input must already be an existing group.
 * The search is case-sensitive. e.g `bali` will not match `Bali`
@@ -292,9 +359,13 @@ Examples:
 * `groupeditname gn/Bali gn/Thailand` to change the group name from Bali to Thailand.
 * `groupeditname gn/Germany gn/Munich` to change the group name from Germany to Munich.
 
-### 2.3. Expenses
+--------------------------------------------------------------------------------------------------------------------
+<div style="page-break-after: always;"></div>
 
-### 2.3.1. Listing expenses of a specified group: `expenses`
+### 3.3. Expenses
+
+### 3.3.1. Listing expenses of a specified group: `expenses`
+
 Shows a list containing all existing expenses within the specified travel group. Expenses are sorted from most recent to least recent.
 
 Format: `expenses gn/GROUP_NAME`
@@ -305,45 +376,45 @@ Format: `expenses gn/GROUP_NAME`
 Examples: 
 * `expenses gn/London` shows all the expenses of the group named London.
 
-### 2.3.2. Adding a shared expense: `addexpense`
+#### 3.3.2. Adding a shared expense: `addexpense`
 Adds a shared expense to the specified travel group.
 The expense can be paid for and split among any number of contacts within the travel group.
 
-Format: `addexpense n/PAYER_NAME gn/GROUP_NAME $/TOTAL AMOUNT PAID d/DESCRIPTION n/[PAYEE WHO MADE A PERSONAL PAYMENT] $/[PAYEE'S PERSONAL PAYMENT TO EXCLUDE FROM TOTAL AMOUNT] ex/[PERSON TO EXCLUDE FROM EXPENSE]`
+Format: `addexpense n/PAYER_NAME gn/GROUP_NAME $/TOTAL_AMOUNT_PAID d/DESCRIPTION [n/PAYEE_WHO_MADE_A_PERSONAL_PAYMENT] [$/PAYEE'S_PERSONAL_PAYMENT_TO_EXCLUDE_FROM_TOTAL_AMOUNT] [ex/PERSON_TO_EXCLUDE_FROM_EXPENSE]`
 
 * There should be at least one PAYER_NAME in the command.
 * PAYER_NAME must be immediately followed by the GROUP NAME.
 * By default, all members of the group will be included in the expense.
-* The names are required to be in the address book.
+* The names are required to be in AWE.
 * The names are required to be in the specified group.
-* Each expense is a class with a unique ID.
+* DESCRIPTION of the expense does not need to be unique.
 * Each personal payment has to be a name immediately followed by the amount of the personal payment.
 
 Examples:
-* addexpense n/Nic gn/Catch up $/50 d/Movie and dinner
-* addexpense n/Tom gn/Date $/60 d/Big meal but Jerry wants to pay for his own Coke n/Jerry $/2
-* addexpense n/Keith gn/Movie night $/40 d/For movie but Kelly didn't watch ex/Kelly
+* `addexpense n/Nic gn/Catch up $/50 d/Movie and dinner`
+* `addexpense n/Tom gn/Date $/60 d/Big meal but Jerry wants to pay for his own Coke n/Jerry $/2`
+* `addexpense n/Keith gn/Movie night $/40 d/For movie but Kelly didn't watch ex/Kelly`
 
-### 2.3.3. Deleting a shared expense: `deleteexpense`
+#### 3.3.3. Deleting a shared expense: `deleteexpense`
 
 Deletes a shared expense from a travel group.
 This command deletes the expense for all members involved in the expense.
 
-Format: `deleteexpense gn/GROUP_NAME i/INDEX`
+Format: `deleteexpense INDEX`
 
-* GROUP_NAME argument is mandatory.
 * INDEX argument is mandatory.
-* INDEX has to be between 1 and the length of the list of expenses for the group with name GROUP_NAME.
+* INDEX has to be between 1 and the length of the list of expenses visible to the user on the screen.
+* Since the command deletes the expense based on the list visible to the user, it is necessary for the user to be viewing a list of expenses when utilising this command. This means that the user must have entered a `findexpenses` or `expenses` command just prior to entering the `deleteexpense` command. 
 
 Examples:
-* `deleteexpense gn/Bali i/1`
-* `deleteexpense gn/London i/2`
+* `deleteexpense 1`
+* `deleteexpense 2`
 
-### 2.3.4. Locating a shared expense by description: `findexpenses`
+#### 3.3.4. Locating a shared expense by description: `findexpenses`
 
 Finds expenses within the specified group which descriptions contain any of the given keywords.
 
-Format: `findexpenses KEYWORD [MORE_KEYWORDS] gn/GROUP_NAME`
+Format: `findexpenses KEYWORD [MORE_KEYWORDS] [gn/GROUP_NAME]`
 
 * The search is case-insensitive. e.g `dinner` will match `Dinner`
 * The order of the keywords does not matter. e.g. `Dinner Transportation` will match `Transportation Dinner`
@@ -356,7 +427,20 @@ Examples:
 * `findexpenses dinner gn/London` returns `dinner` and `Friday dinner`
 * `findexpenses lunch souvenirs` returns `lunch`, `souvenirs`<br>
 
-### 2.3.5. Calculating payments to make: `calculatepayments`
+#### 3.3.5 Calculating total spending of each user: `transactionsummary`
+Displays a list of spending for each users in the group.
+
+Format: `transactionsummary gn/GROUP_NAME`
+
+* GROUP_NAME is a mandatory field.
+* A group with GROUP_NAME as its name must exist.
+
+Examples:
+* `transactionsummary gn/Bali`
+* `transactionsummary gn/London`
+
+
+#### 3.3.6. Calculating payments to make: `calculatepayments`
 Uses the net spend of the user on the trip to tabulate a fast set of payments to settle the debts between members of the group.
 
 Format: `calculatepayments gn/GROUP_NAME`
@@ -367,11 +451,15 @@ Format: `calculatepayments gn/GROUP_NAME`
 
 Examples:
 * `calculatepayments gn/Bali`
-* `calculatepayments gn/London`
+* `calculatepayments gn/London`<br>
+  ![result for 'findcontacts Taiwan Malaysia'](images/CALCULATEPAYMENTSUI.png)
 
-### 2.4. Miscellaneous
+--------------------------------------------------------------------------------------------------------------------
+<div style="page-break-after: always;"></div>
 
-#### 2.4.1. Viewing help : `help`
+### 3.4. Miscellaneous
+
+#### 3.4.1. Viewing help : `help`
 
 Shows a message explaining how to access the help page.
 
@@ -379,23 +467,23 @@ Shows a message explaining how to access the help page.
 
 Format: `help`
 
-### 2.4.2. Clearing all entries : `clear`
+#### 3.4.2. Clearing all entries : `clear`
 
-Clears all entries from the AWE.
+Clears all entries from AWE.
 
 Format: `clear`
 
-### 2.4.3. Exiting the program : `exit`
+#### 3.4.3. Exiting the program : `exit`
 
 Exits the program.
 
 Format: `exit`
 
-### 2.4.4. Saving the data
+#### 3.4.4. Saving the data
 
 AWE data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
 
-### 2.4.5. Editing the data file
+#### 3.4.5. Editing the data file
 
 AWE data are saved as a JSON file `[JAR file location]/data/awe.json`. Advanced users are welcome to update data directly by editing that data file.
 
@@ -403,7 +491,10 @@ AWE data are saved as a JSON file `[JAR file location]/data/awe.json`. Advanced 
 If your changes to the data file makes its format invalid, AWE will discard all data and start with an empty data file at the next run.
 </div>
 
-## 3. FAQ
+--------------------------------------------------------------------------------------------------------------------
+<div style="page-break-after: always;"></div>
+
+## 4. FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
 **A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AWE home folder.
@@ -416,25 +507,63 @@ If your changes to the data file makes its format invalid, AWE will discard all 
 ![Mac Security Preference](images/MacSecurityPreference.png)
 <br>
 If your questions are not answered in the FAQ, check out the issue page on our GitHub linked [here](https://github.com/AY2122S1-CS2103T-F13-1/tp/issues).
---------------------------------------------------------------------------------------------------------------------
 
-## 4. Command summary
+--------------------------------------------------------------------------------------------------------------------
+<div style="page-break-after: always;"></div>
+
+## 5. Command summary
+
+### 5.1 Contacts commands
 
 Action | Format, Examples
 --------|------------------
+**View Contacts** | `contacts`
 **Add Contact** | `addcontact n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
-**Add Expense** | `add expense add expense /des DESCRIPTION /by PAYER_NAME1 AMOUNT PAID BY NAME 1 /for PAYEE_NAME1 PAYEE_NAME 2` <br> e.g., `add expense /des Koi /by Jake 20.00 /for Justin, Raj, Keith`
-**Clear** | `clear`
-**Create Group** | `creategroup gn/GROUP_NAME n/NAME1 n/NAME2 n/NAME3...t/TAG1` <br> e.g., `creategroup gn/Bali n/Jacob Tan n/Max Chia n/Julianne Tay t/friends`
 **Delete Contact** | `deletecontact INDEX`<br> e.g., `delete 3`
-**Delete Group** | `deletegroup gn/GROUP_NAME` <br> e.g., `deletegroup gn/Vienna`
-**Delete Expense** | `deleteexpense gn/GROUP_NAME i/INDEX` <br> e.g., `deleteexpense gn/Bali i/1`
 **Edit Contact** | `editcontact INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Find Contacts** | `findcontacts KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
-**Find Groups** | `findgroups KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
-**Find Expenses** | `findexpenses KEYWORD [MORE_KEYWORDS] gn/GROUP_NAME`<br> e.g., `find dinner buffet gn/London`
-**Calculate Payments** | `calculatepayments gn/GROUP_NAME` <br> e.g., `calculatepayments gn/Bali` 
-**Help** | `help`
-**View Contacts** | `contacts`
+
+<div style="page-break-after: always;"></div>
+
+### 5.2 Groups commands
+
+Action | Format, Examples
+--------|------------------
 **View Groups** | `groups`
+**Create Group** | `creategroup gn/GROUP_NAME n/NAME1 n/NAME2 n/NAME3...t/TAG1` <br> e.g., `creategroup gn/Bali n/Jacob Tan n/Max Chia n/Julianne Tay t/friends`
+**Delete Group** | `deletegroup gn/GROUP_NAME` <br> e.g., `deletegroup gn/Vienna`
+**Add Contact to Group** | `groupaddcontact gn/GROUP_NAME n/NAME1 [n/MORE_NAMES]` <br> e.g., `groupaddcontact gn/Bali n/Jacob Tan`
+**Add Tags to Group** | `groupaddtag gn/GROUP_NAME n/TAG1 [n/MORE_TAGS]` <br> e.g., `groupaddtag gn/Bali n/friends`
+**Edit Group Name** | `groupeditname gn/OLD_GROUP_NAME gn/NEW_GROUP_NAME` <br> e.g., `groupedittag gn/Bali gn/Hanoi`
+**Remove Tags from Group** | `groupremovetag gn/GROUP_NAME n/TAG1 [n/MORE_TAGS]` <br> e.g., `groupremovetag gn/Bali n/friends`
+**Remove Contact from Group** | `groupremovecontact gn/GROUP_NAME n/NAME1 [n/MORE_NAMES]` <br> e.g., `groupremovecontact gn/Bali n/Jacob Tan`
+**Find Groups** | `findgroups KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
+
+<div style="page-break-after: always;"></div>
+
+### 5.3 Expense commands
+
+Action | Format, Examples
+--------|------------------
 **View Expense** | `expense INDEX` <br> e.g., `expense 2`
+**Add Expense** | `add expense add expense /des DESCRIPTION /by PAYER_NAME1 AMOUNT PAID BY NAME 1 /for PAYEE_NAME1 PAYEE_NAME 2` <br> e.g., `add expense /des Koi /by Jake 20.00 /for Justin, Raj, Keith`
+**Delete Expense** | `deleteexpense INDEX` <br> e.g., `deleteexpense 1`
+**Find Expenses** | `findexpenses KEYWORD [MORE_KEYWORDS] gn/GROUP_NAME`<br> e.g., `find dinner buffet gn/London`
+**Calculate Spending** | `transactionsummary gn/GROUP_NAME` <br> e.g., `transactionsummary gn/Bali` 
+**Calculate Payments** | `calculatepayments gn/GROUP_NAME` <br> e.g., `calculatepayments gn/Bali` 
+
+### 5.4 Miscellaneous Commands
+Action | Format, Examples
+--------|------------------
+**Clear** | `clear`
+**Help** | `help`
+
+
+--------------------------------------------------------------------------------------------------------------------
+<div style="page-break-after: always;"></div>
+
+## 6. Final Word
+AWE hopes to revolutionise the group-travel space through its effective handling of shared expenses on a centralised
+platform to maximise the efficiency of payment and recollection of debts. Our team is committed to delivering a seamless 
+experience for potential users. We are always looking to improve. As such, do drop us an email at awe80contact@gmail.com
+if you discover any bugs while using the application.

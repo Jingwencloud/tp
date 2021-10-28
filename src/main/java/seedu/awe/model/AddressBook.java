@@ -98,6 +98,11 @@ public class AddressBook implements ReadOnlyAddressBook {
     }
 
     @Override
+    public Optional<Group> getGroupFromExpenseList() {
+        return expenses.getGroup();
+    }
+
+    @Override
     public ObservableList<Payment> getPaymentList() {
         return payments.asUnmodifiableObservableList();
     }

@@ -3,7 +3,7 @@
 
 box Logic LOGIC_COLOR_T1
 participant ":LogicManager" as LogicManager LOGIC_COLOR
-participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":AweParser" as AweParser LOGIC_COLOR
 participant ":FindExpensesCommandParser" as FindExpensesCommandParser LOGIC_COLOR
 participant "d:FindExpensesCommand" as FindExpensesCommand LOGIC_COLOR
 participant ":CommandResult" as CommandResult LOGIC_COLOR
@@ -17,17 +17,17 @@ end box
 [-> LogicManager : execute("findexpenses dinner gn/London")
 activate LogicManager
 
-LogicManager -> AddressBookParser : parseCommand("findexpenses dinner gn/London")
-activate AddressBookParser
+LogicManager -> AweParser : parseCommand("findexpenses dinner gn/London")
+activate AweParser
 
 create FindExpensesCommandParser
-AddressBookParser -> FindExpensesCommandParser
+AweParser -> FindExpensesCommandParser
 activate FindExpensesCommandParser
 
-FindExpensesCommandParser --> AddressBookParser
+FindExpensesCommandParser --> AweParser
 deactivate FindGroupsCommandParser
 
-AddressBookParser -> FindExpensesCommandParser : parse("dinner gn/London")
+AweParser -> FindExpensesCommandParser : parse("dinner gn/London")
 activate FindExpensesCommandParser
 
 create DescriptionContainsKeywordsPredicate
@@ -44,14 +44,14 @@ activate FindExpensesCommand
 FindExpensesCommand --> FindExpensesCommandParser : d
 deactivate FindExpensesCommand
 
-FindExpensesCommandParser --> AddressBookParser : d
+FindExpensesCommandParser --> AweParser : d
 deactivate FindExpensesCommandParser
 'Hidden arrow to position the destroy marker below the end of the activation bar.
-FindExpensesCommandParser -[hidden]-> AddressBookParser
+FindExpensesCommandParser -[hidden]-> AweParser
 destroy FindExpensesCommandParser
 
-AddressBookParser --> LogicManager : d
-deactivate AddressBookParser
+AweParser --> LogicManager : d
+deactivate AweParser
 
 LogicManager -> FindExpensesCommand : execute()
 activate FindExpensesCommand

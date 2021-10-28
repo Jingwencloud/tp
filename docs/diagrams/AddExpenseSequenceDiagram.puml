@@ -1,0 +1,69 @@
+@startuml
+!include style.puml
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AweParser" as AweParser LOGIC_COLOR
+participant ":AddExpenseCommandParser" as AddExpenseCommandParser LOGIC_COLOR
+participant "addExpenseCommand:AddExpenseCommand" as AddExpenseCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("addexpense n/Alex Yeoh gn/Bali $/50 d/Food")
+activate LogicManager
+
+LogicManager -> AweParser : parseCommand("addexpense n/Alex Yeoh gn/Bali $/50 d/Food")
+activate AweParser
+
+create AddExpenseCommandParser
+AweParser -> AddExpenseCommandParser
+activate AddExpenseCommandParser
+
+AddExpenseCommandParser --> AweParser
+deactivate AddExpenseCommandParser
+
+AweParser -> AddExpenseCommandParser : parse("n/Alex Yeoh gn/Bali $/50 d/Food")
+activate AddExpenseCommandParser
+
+create AddExpenseCommand
+AddExpenseCommandParser -> AddExpenseCommand
+activate AddExpenseCommand
+
+AddExpenseCommand --> AddExpenseCommandParser : addExpenseCommand
+deactivate AddExpenseCommand
+
+AddExpenseCommandParser --> AweParser : addExpenseCommand
+deactivate AddExpenseCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+AddExpenseCommandParser -[hidden]-> AweParser
+destroy AddExpenseCommandParser
+
+AweParser --> LogicManager : addExpenseCommand
+deactivate AweParser
+
+LogicManager -> AddExpenseCommand : execute()
+activate AddExpenseCommand
+
+AddExpenseCommand -> Model : addExpense(e:Expense, g:Group)
+activate Model
+
+Model --> AddExpenseCommand
+deactivate Model
+
+create CommandResult
+AddExpenseCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> AddExpenseCommand
+deactivate CommandResult
+
+AddExpenseCommand --> LogicManager : result
+deactivate AddExpenseCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

@@ -1,0 +1,29 @@
+@startuml
+!pragma useVerticalIf on
+start
+:User executes command;
+
+'Since the beta syntax does not support placing the condition outside the
+'diamond we place it as the true branch instead.
+'  `CONTACT_PAGE`, ``, ``, ``, ``
+if () then ( [type == show contacts] )
+    :UiView.CONTACT_PAGE passed to ViewPanel
+                     and contacts view displayed;
+elseif () then ( [type == show groups] )
+    :UiView.GROUP_PAGE passed to ViewPanel
+                          and group view displayed;
+elseif () then ( [type == show expense] )
+    :UiView.EXPENSE_PAGE passed to ViewPanel
+                     and expense view displayed;
+elseif () then ( [type == show transaction summary] )
+    :UiView.TRANSACTION_SUMMARY passed to ViewPanel
+                   and transaction summary view displayed;
+elseif () then ( [type == show payment] )
+    :UiView.PAYMENT_PAGE passed to ViewPanel
+                      and payment view displayed;
+else ( [else] )
+    :Nothing is passed to ViewPanel and view panel does not change;
+endif
+
+stop
+@enduml

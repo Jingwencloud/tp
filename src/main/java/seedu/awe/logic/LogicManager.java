@@ -10,7 +10,7 @@ import seedu.awe.commons.core.LogsCenter;
 import seedu.awe.logic.commands.Command;
 import seedu.awe.logic.commands.CommandResult;
 import seedu.awe.logic.commands.exceptions.CommandException;
-import seedu.awe.logic.parser.AddressBookParser;
+import seedu.awe.logic.parser.AweParser;
 import seedu.awe.logic.parser.exceptions.ParseException;
 import seedu.awe.model.Model;
 import seedu.awe.model.ReadOnlyAddressBook;
@@ -30,7 +30,7 @@ public class LogicManager implements Logic {
 
     private final Model model;
     private final Storage storage;
-    private final AddressBookParser addressBookParser;
+    private final AweParser aweParser;
 
     /**
      * Constructs a {@code LogicManager} with the given {@code Model} and {@code Storage}.
@@ -38,7 +38,7 @@ public class LogicManager implements Logic {
     public LogicManager(Model model, Storage storage) {
         this.model = model;
         this.storage = storage;
-        addressBookParser = new AddressBookParser(model);
+        aweParser = new AweParser(model);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class LogicManager implements Logic {
         logger.info("----------------[USER COMMAND][" + commandText + "]");
 
         CommandResult commandResult;
-        Command command = addressBookParser.parseCommand(commandText);
+        Command command = aweParser.parseCommand(commandText);
         commandResult = command.execute(model);
 
         try {

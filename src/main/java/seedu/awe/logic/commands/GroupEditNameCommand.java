@@ -1,6 +1,10 @@
 package seedu.awe.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPEDITNAMECOMMAND_ERROR;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPEDITNAMECOMMAND_SUCCESS;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPEDITNAMECOMMAND_USAGE;
+import static seedu.awe.commons.core.Messages.MESSAGE_NONEXISTENT_GROUP;
 import static seedu.awe.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Objects;
@@ -12,10 +16,6 @@ import seedu.awe.model.group.GroupName;
 
 public class GroupEditNameCommand extends Command {
     public static final String COMMAND_WORD = "groupeditname";
-    public static final String MESSAGE_SUCCESS = "Group name changed to %1$s";
-    public static final String MESSAGE_ERROR = "Group name not changed.";
-    public static final String MESSAGE_USAGE = "groupeditname gn/[OLDGROUPNAME] gn/[NEWGROUPNAME]";
-    public static final String MESSAGE_NONEXISTENT_GROUP = "Group %1$s does not exist.";
 
     private final GroupName oldGroupName;
     private final GroupName newGroupName;
@@ -47,17 +47,17 @@ public class GroupEditNameCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         if (!isValidCommand) {
-            throw new CommandException(MESSAGE_ERROR + "\n" + MESSAGE_USAGE);
+            throw new CommandException(MESSAGE_GROUPEDITNAMECOMMAND_ERROR + "\n" + MESSAGE_GROUPEDITNAMECOMMAND_USAGE);
         }
 
         Group oldGroup = model.getGroupByName(oldGroupName);
         if (Objects.isNull(oldGroup)) {
             throw new CommandException(String.format(MESSAGE_NONEXISTENT_GROUP, oldGroupName));
         }
-        Group newGroup = new Group(newGroupName, oldGroup.getMembers(), oldGroup.getTags());
+        Group newGroup = oldGroup.editName(newGroupName);
         model.setGroup(oldGroup, newGroup);
         model.setAllMembersOfGroup(newGroup);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, newGroupName));
+        return new CommandResult(String.format(MESSAGE_GROUPEDITNAMECOMMAND_SUCCESS, newGroupName));
     }
 
     @Override

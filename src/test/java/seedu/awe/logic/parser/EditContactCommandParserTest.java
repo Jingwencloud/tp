@@ -1,5 +1,7 @@
 package seedu.awe.logic.parser;
 
+import static seedu.awe.commons.core.Messages.MESSAGE_EDITCONTACTCOMMAND_NOT_EDITED;
+import static seedu.awe.commons.core.Messages.MESSAGE_EDITCONTACTCOMMAND_USAGE;
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.awe.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.awe.logic.commands.CommandTestUtil.ADDRESS_DESC_BOB;
@@ -48,7 +50,7 @@ public class EditContactCommandParserTest {
     private static final String TAG_EMPTY = " " + PREFIX_TAG;
 
     private static final String MESSAGE_INVALID_FORMAT =
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditContactCommand.MESSAGE_USAGE);
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_EDITCONTACTCOMMAND_USAGE);
 
     private EditCommandParser parser = new EditCommandParser();
 
@@ -58,7 +60,7 @@ public class EditContactCommandParserTest {
         assertParseFailure(parser, VALID_NAME_AMY, MESSAGE_INVALID_FORMAT);
 
         // no field specified
-        assertParseFailure(parser, "1", EditContactCommand.MESSAGE_NOT_EDITED);
+        assertParseFailure(parser, "1", MESSAGE_EDITCONTACTCOMMAND_NOT_EDITED);
 
         // no index and no field specified
         assertParseFailure(parser, "", MESSAGE_INVALID_FORMAT);

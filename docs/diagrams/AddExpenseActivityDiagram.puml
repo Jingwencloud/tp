@@ -1,0 +1,15 @@
+@startuml
+start
+:User executes command;
+
+'Since the beta syntax does not support placing the condition outside the
+'diamond we place it as the true branch instead.
+
+if () then ([specified group exists in model, specified participants of expense are members of specified group and expense is valid])
+    :Retrieve Group from model;
+    :New Expense involving participants created in specified group;
+
+else([else])
+endif
+stop
+@enduml

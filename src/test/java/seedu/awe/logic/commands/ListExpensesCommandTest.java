@@ -1,5 +1,7 @@
 package seedu.awe.logic.commands;
 
+import static seedu.awe.commons.core.Messages.MESSAGE_LISTEXPENSESCOMMAND_GROUP_NOT_FOUND;
+import static seedu.awe.commons.core.Messages.MESSAGE_LISTEXPENSESCOMMAND_SUCCESS;
 import static seedu.awe.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.awe.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.awe.testutil.Assert.assertThrows;
@@ -25,14 +27,15 @@ public class ListExpensesCommandTest {
     public void execute_invalidGroupName_throwsCommandException() {
         GroupName test = new GroupName("test");
         ListExpensesCommand listExpensesCommand = new ListExpensesCommand(test);
-        assertCommandFailure(listExpensesCommand, model, ListExpensesCommand.MESSAGE_GROUP_NOT_FOUND);
+        assertCommandFailure(listExpensesCommand, model, MESSAGE_LISTEXPENSESCOMMAND_GROUP_NOT_FOUND);
     }
 
     @Test
     public void execute_showExpenses_success() {
         ListExpensesCommand listExpensesCommand = new ListExpensesCommand(BALI.getGroupName());
-        CommandResult expectedCommandResult = new CommandResult(ListExpensesCommand.MESSAGE_SUCCESS,
-                false, false, false, false, true, false, false);
+        CommandResult expectedCommandResult = new CommandResult(MESSAGE_LISTEXPENSESCOMMAND_SUCCESS,
+                false, false, false, false,
+                true, false, false);
         assertCommandSuccess(listExpensesCommand, model, expectedCommandResult, expectedModel);
     }
 }

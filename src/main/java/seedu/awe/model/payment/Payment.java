@@ -1,6 +1,7 @@
 package seedu.awe.model.payment;
 
-import java.util.Comparator;
+import static seedu.awe.commons.util.CollectionUtil.requireAllNonNull;
+
 import java.util.Objects;
 
 import seedu.awe.model.expense.Cost;
@@ -18,6 +19,7 @@ public class Payment implements Comparable<Payment> {
      * @param cost amount to pay
      */
     public Payment(Person payer, Person payee, Cost cost) {
+        requireAllNonNull(payer, payee, cost);
         this.payer = payer;
         this.payee = payee;
         this.cost = cost;
@@ -88,14 +90,5 @@ public class Payment implements Comparable<Payment> {
                 return 0;
             }
         }
-    }
-
-    public static Comparator<Payment> getPaymentComparator() {
-        return new Comparator<Payment>() {
-            @Override
-            public int compare(Payment payment, Payment t1) {
-                return payment.compareTo(t1);
-            }
-        };
     }
 }

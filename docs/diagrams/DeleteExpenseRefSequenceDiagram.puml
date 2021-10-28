@@ -1,0 +1,38 @@
+@startuml
+!include style.puml
+
+box Logic LOGIC_COLOR_T1
+
+participant ":AweParser" as AweParser LOGIC_COLOR
+participant ":DeleteExpenseCommandParser" as DeleteExpenseCommandParser LOGIC_COLOR
+participant "deleteExpenseCommand:DeleteExpenseCommand" as DeleteExpenseCommand LOGIC_COLOR
+end box
+
+mainframe "sd get deleteExpenseCommand"
+
+activate AweParser
+create DeleteExpenseCommandParser
+AweParser -> DeleteExpenseCommandParser
+activate DeleteExpenseCommandParser
+
+DeleteExpenseCommandParser --> AweParser
+deactivate DeleteExpenseCommandParser
+
+AweParser -> DeleteExpenseCommandParser : parse("1")
+activate DeleteExpenseCommandParser
+
+create DeleteExpenseCommand
+DeleteExpenseCommandParser -> DeleteExpenseCommand
+activate DeleteExpenseCommand
+
+DeleteExpenseCommand --> DeleteExpenseCommandParser : deleteExpenseCommand
+deactivate DeleteExpenseCommand
+
+DeleteExpenseCommandParser --> AweParser : deleteExpenseCommand
+deactivate DeleteExpenseCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+DeleteExpenseCommandParser -[hidden]-> AweParser
+destroy DeleteExpenseCommandParser
+deactivate AweParser
+
+@enduml

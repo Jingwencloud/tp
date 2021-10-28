@@ -1,0 +1,36 @@
+@startuml
+!include style.puml
+
+box Logic LOGIC_COLOR_T1
+
+participant ":AweParser" as AweParser LOGIC_COLOR
+participant ":CreateGroupCommandParser" as CreateGroupCommandParser LOGIC_COLOR
+participant "createGroupCommand:CreateGroupCommand" as CreateGroupCommand LOGIC_COLOR
+end box
+
+mainframe "sd get createGroupCommand"
+
+create CreateGroupCommandParser
+AweParser -> CreateGroupCommandParser
+activate CreateGroupCommandParser
+
+CreateGroupCommandParser --> AweParser
+deactivate CreateGroupCommandParser
+
+AweParser -> CreateGroupCommandParser : parse("gn/Bali")
+activate CreateGroupCommandParser
+
+create CreateGroupCommand
+CreateGroupCommandParser -> CreateGroupCommand
+activate CreateGroupCommand
+
+CreateGroupCommand --> CreateGroupCommandParser : createGroupCommand
+deactivate CreateGroupCommand
+
+CreateGroupCommandParser --> AweParser : createGroupCommand
+deactivate CreateGroupCommandParser
+'Hidden arrow to position the destroy marker below the end of the activation bar.
+CreateGroupCommandParser -[hidden]-> AweParser
+destroy CreateGroupCommandParser
+
+@enduml

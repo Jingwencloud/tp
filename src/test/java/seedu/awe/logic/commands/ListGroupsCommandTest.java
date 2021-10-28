@@ -1,5 +1,6 @@
 package seedu.awe.logic.commands;
 
+import static seedu.awe.commons.core.Messages.MESSAGE_LISTGROUPSCOMMAND_SUCCESS;
 import static seedu.awe.logic.commands.CommandTestUtil.assertCommandSuccess;
 
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,9 @@ public class ListGroupsCommandTest {
 
     @Test
     public void execute_showGroup_success() {
-        CommandResult expectedCommandResult = new CommandResult(ListGroupsCommand.MESSAGE_SUCCESS,
-                false, false, true, false, false, false, false);
+        CommandResult expectedCommandResult = new CommandResult(MESSAGE_LISTGROUPSCOMMAND_SUCCESS,
+                false, false, true, false,
+                false, false, false);
         assertCommandSuccess(new ListGroupsCommand(), model, expectedCommandResult, expectedModel);
     }
 }

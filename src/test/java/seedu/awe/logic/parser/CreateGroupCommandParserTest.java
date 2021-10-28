@@ -2,6 +2,10 @@ package seedu.awe.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.awe.commons.core.Messages.MESSAGE_CREATEGROUPCOMMAND_EMPTY_GROUP;
+import static seedu.awe.commons.core.Messages.MESSAGE_CREATEGROUPCOMMAND_ERROR;
+import static seedu.awe.commons.core.Messages.MESSAGE_CREATEGROUPCOMMAND_INVALID_NAMES;
+import static seedu.awe.commons.core.Messages.MESSAGE_CREATEGROUPCOMMAND_USAGE;
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.awe.logic.commands.CommandTestUtil.GROUPNAME_DESC_BALI;
 import static seedu.awe.logic.commands.CommandTestUtil.INVALID_GROUP_NAME_DESC;
@@ -13,8 +17,6 @@ import static seedu.awe.logic.commands.CommandTestUtil.NAME_DESC_AMY;
 import static seedu.awe.logic.commands.CommandTestUtil.NAME_DESC_BOB;
 import static seedu.awe.logic.commands.CommandTestUtil.PREAMBLE_NON_EMPTY;
 import static seedu.awe.logic.commands.CommandTestUtil.PREAMBLE_WHITESPACE;
-import static seedu.awe.logic.commands.CreateGroupCommand.MESSAGE_EMPTY_GROUP;
-import static seedu.awe.logic.commands.CreateGroupCommand.MESSAGE_INVALID_NAMES;
 import static seedu.awe.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.awe.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.awe.testutil.Assert.assertThrows;
@@ -91,7 +93,7 @@ public class CreateGroupCommandParserTest {
 
     @Test
     public void parse_compulsoryFieldMissing_failure() throws DuplicateGroupException {
-        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, CreateGroupCommand.MESSAGE_USAGE);
+        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_CREATEGROUPCOMMAND_USAGE);
 
         resetParser();
         // missing group prefix
@@ -104,7 +106,7 @@ public class CreateGroupCommandParserTest {
 
     @Test
     public void parse_invalidValue_failure() {
-        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, CreateGroupCommand.MESSAGE_USAGE);
+        String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_CREATEGROUPCOMMAND_USAGE);
         resetParser();
         // invalid group name
         assertParseFailure(parser, INVALID_GROUP_NAME_DESC + NAME_DESC_BOB + NAME_DESC_AMY + NAME_DESC_ALICE,
@@ -114,7 +116,8 @@ public class CreateGroupCommandParserTest {
         // invalid names returns EmptyGroupException
         String userInput = GROUPNAME_DESC_BALI + INVALID_NAME_DESC + INVALID_NAME_DESC_ONE + INVALID_NAME_DESC_TWO;
         assertThrows(EmptyGroupException.class,
-                String.format(MESSAGE_EMPTY_GROUP, MESSAGE_INVALID_NAMES), () -> parser.parse(userInput));
+                String.format(MESSAGE_CREATEGROUPCOMMAND_EMPTY_GROUP, MESSAGE_CREATEGROUPCOMMAND_INVALID_NAMES), () ->
+                        parser.parse(userInput));
 
         resetParser();
         // non-empty preamble
@@ -147,7 +150,7 @@ public class CreateGroupCommandParserTest {
         membersToFindExtra.add(AMY.getName());
         membersToFindExtra.add(ALICE.getName());
         membersToFindExtra.add(NONEXISTENTPERSON.getName());
-        assertThrows(ParseException.class, CreateGroupCommand.MESSAGE_ERROR, () ->
+        assertThrows(ParseException.class, MESSAGE_CREATEGROUPCOMMAND_ERROR, () ->
                 emptyParser.findGroupMembers(membersToFindExtra));
 
         //Argument membersToFind contains members but CreateGroupCommandParser has empty toBeAddedToGroup List.
@@ -156,15 +159,16 @@ public class CreateGroupCommandParserTest {
         membersToFind.add(BOB.getName());
         membersToFind.add(AMY.getName());
         membersToFind.add(ALICE.getName());
-        assertThrows(ParseException.class, CreateGroupCommand.MESSAGE_ERROR, () ->
+        assertThrows(ParseException.class, MESSAGE_CREATEGROUPCOMMAND_ERROR, () ->
                 emptyParser.findGroupMembers(membersToFind));
 
         //Argument membersToFind is empty list and CreateGroupCommandParser has empty toBeAddedToGroup List.
         //Throws EmptyGroupException.
         resetParser();
         ArrayList<Name> emptyMembersToFind = new ArrayList<>();
-        String exceptionMessage = String.format(MESSAGE_EMPTY_GROUP, MESSAGE_INVALID_NAMES,
-                CreateGroupCommand.MESSAGE_USAGE);
+        String exceptionMessage = String.format(MESSAGE_CREATEGROUPCOMMAND_EMPTY_GROUP,
+                MESSAGE_CREATEGROUPCOMMAND_INVALID_NAMES,
+                MESSAGE_CREATEGROUPCOMMAND_USAGE);
         assertThrows(EmptyGroupException.class, exceptionMessage, () ->
                 parser.findGroupMembers(emptyMembersToFind));
     }
@@ -189,12 +193,12 @@ public class CreateGroupCommandParserTest {
         assertTrue(parser.addMemberIfExist(BOB.getName()));
 
         //Attempts to add a repeat Bob name will throw parseException
-        assertThrows(ParseException.class, CreateGroupCommand.MESSAGE_ERROR, () ->
+        assertThrows(ParseException.class, MESSAGE_CREATEGROUPCOMMAND_ERROR, () ->
                 parser.addMemberIfExist(BOB.getName()));
 
         resetParser();
         //Add Person who does not exist
-        assertThrows(ParseException.class, CreateGroupCommand.MESSAGE_ERROR, () ->
+        assertThrows(ParseException.class, MESSAGE_CREATEGROUPCOMMAND_ERROR, () ->
                 parser.addMemberIfExist(NONEXISTENTPERSON.getName()));
     }
 

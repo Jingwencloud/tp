@@ -2,13 +2,14 @@
 layout: page
 title: Developer Guide
 ---
+## Table of Contents
 * Table of Contents
 {:toc}
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Acknowledgements**
 
-* {list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
+This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -73,7 +74,7 @@ The **API** of this component is specified in [`Ui.java`](https://github.com/ay2
 ![Structure of the UI Component](images/UiClassDiagram.png)
 (Note: Implementation of NavigationButton and ViewPanel class diagram are referenced below.)
 
-The UI consists of a `MainWindow` that is made up of parts e.g.`CommandBox`, `ResultDisplay`, `ViewPanel`, `NavigationButton` etc. 
+The UI consists of a `MainWindow` that is made up of parts e.g. `CommandBox`, `ResultDisplay`, `ViewPanel`, `NavigationButton` etc. 
 All these, except for `GroupButtonListener` and `PersonButtonListner` in `NavigationButton`, inherit from the abstract `UiPart` class which captures the commonalities between classes that represent parts of the visible GUI.
 
 The `UI` component uses the JavaFx UI framework. The layout of these UI parts are defined in matching `.fxml` files that are in the `src/main/resources/view` folder. For example, the layout of the [`MainWindow`](https://github.com/ay2122s1-cs2103t-f13-1/addressbook-level3/tree/master/src/main/java/seedu/address/ui/MainWindow.java) is specified in [`MainWindow.fxml`](https://github.com/ay2122s1-cs2103t-f13-1/addressbook-level3/tree/master/src/main/resources/view/MainWindow.fxml)
@@ -296,23 +297,107 @@ The following sequence operation shows how the `deletegroup` operation works.
     * This information is unrecoverable once deleted.
     * As such, it is better to choose Alternative 1, as this makes it difficult for user to accidentally delete a group.
 
+**Aspect: Internal delete mechanism:**
+
+* **Alternative 1 (current choice):** Retrieve group from list and delete
+  * Pros: Easy to implement.
+  * Pros: Easier to modify in future.
+  * Cons: Extra step of retrieval leads to slower execution.
+  
+
+* **Alternative 2 (name based):** Delete based on `GroupName`
+  * Pros: Easy to implement.
+  * Pros: Process is completed faster.
+  * Cons: Might cause issues in case of future modifications.
+  
+
+* **Justification**
+  * Retrieving the group and subsequently deleting the group is a slower process.
+  * However, the alternative implementation relies on the uniqueness of the `GroupName` field of `Group` objects.
+  * Should we modify or remove the constraint, the alternative implementation would require significant alterations.
+  * To make the feature more extendable, we choose alternative 1.
+
 ### Find group feature
 
-The find group feature supports both single predicate and multi-predicate search. This allows the displayed view panel to show the entries related to the search keywords enterd by the user
+The find group feature supports both single keyword and multi keyword search. This allows the displayed view panel to show the entries related to the search keywords entered by the user.
 
-![Interactions Inside the Logic Component for the `findgroups` Command](images/FindGroupsSequenceDiagram.png)
+The following activity diagram shows what happens when a user executes a `findgroups` command:
 
-Step 1. When the `findgroups` command executes, the message is passed into `LogicManager` and parsed by `AddressBookParser`.
+<img src="images/FindGroupsActivityDiagram.png" width="350" />
+
+Given below is an example usage scenario and how the `findgroup` operation behaves at each step:
+
+Assuming the programs only have the initial data when the user first starts the app, the `FilteredList` should contain only 2 groups - London and Bali.
+
+Step 1. When the user executes `findgroups London` command, the message is passed into `LogicManager` and parsed by `AddressBookParser`.
 
 Step 2. `FindGroupsCommandParser` is created and the arguments are parsed by it. The arguments are used to create `GroupContainsKeywordsPredicate` and `FindGroupsCommand` is returned to the `LogicManager`.
 
-Step 3. The `LogicManager` then calls `FindGroupCommand#execute(model)` method, which updated the `FilteredList<Group>` in `ModelManager`.
+Step 3. The `LogicManager` then calls `FindGroupCommand#execute(model)` method, which updated the `FilteredList<Group>` in `ModelManager`. Thereafter, the `FilteredList<Group>` should contains only London.
 
-Step 4. The GUI listens for updates in the `FilteredList<Group>` and updates the display accordingly.
+Step 4. The GUI listens for updates in the `FilteredList<Group>` and updates the display to display London only.
 
-Step 5. `CommandResult` is returned to the `LogicManager`, which also switches the viewpanel to `GroupsListPanel` if needed.
+Step 5. `CommandResult` is returned to the `LogicManager`, which also switches the view panel to `GroupsListPanel` if needed. See UI implementation below for more details of switching view panel.
 
 Step 6. The output from `CommandResult` is then displayed as an output for the user.
+
+The following sequence diagram shows how the `findgroups` operation works:
+
+<img src="images/FindGroupsSequenceDiagram.png" width="600" />
+
+
+### Add expense feature
+
+The add expense mechanism is facilitated by defining an Expense model and adding an Expense List field to
+`AddressBook`. The Expense model contains a `Person` field containing the payer of the Expense, a `Cost` field
+containing the cost of the expense, a `List` of `Person` objects that keeps track of the people involved in the
+expense, a `HashMap` that contains details of how much each member has paid in total for the expense.
+
+The following activity diagram shows what happens when a user executes a `addexpense` command.
+
+![AddExpenseActivityDiagram](images/AddExpenseActivityDiagram.png)
+
+Given below is an example usage scenario and how the `addexpense` mechanism behaves at each step.
+
+Step 1. A valid `addexpense` command is given as user input. This prompts the `LogicManager` to run its execute()
+method.
+
+Step 2. The `AddExpenseCommandParser` parses the input and checks for presence of the relevant prefixes.
+It also checks that the group name is valid and all members specified are in the specified group.
+It returns a `AddExpenseCommand`.
+
+Step 3. `AddExpenseCommand` runs its execute() method which adds the newly created expense involving the into the
+relevant group members into the group and the group is updated in the AWE model.Upon successful execution,
+`CommandResult` is returned.
+
+The following sequence operation shows how the `addexpense` operation works.
+![AddExpenseSequenceDiagram](images/AddExpenseSequenceDiagram.png)
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `AddExpenseCommandParser`
+should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
+</div>
+
+#### Design considerations:
+
+**Aspect: User command for `addexpense`:**
+
+* **Alternative 1 (current choice):** Create Expense with specified group and group members.
+    * Pros: Intuitive for user to create an expense with specified group and group members via their names.
+    * Pros: Provides user with convenience of creating an expense with minimal input.
+    * Cons: Harder to implement.
+    * Cons: Easier for user to make an erroneous command.
+
+
+* **Alternative 2 (index based):** Create Expense with based on index position in `ObservableList`.
+    * Pros: Easy to implement.
+    * Cons: Inconvenient for user to add an expense as they have to check again the index of both the person and group.
+    * Cons: Easy for user to make an erroneous command.
+
+* **Justification**
+    * Each person has a unique name and the implementation for adding an expense based on a person's and group's 
+      name is simple.
+    * Users may need a long time to find the index of a person or group if the list of either is very long.
+    * Hence, adding expenses based on the specified person and group name is more appropriate.
 
 ### Find Expenses Feature
 
@@ -368,6 +453,203 @@ The following sequence operation shows how the `findexpenses` operation works.
     * Each group has a unique name and the implementation for finding a group based on the group name is simple. 
     * Users may need a long time to find the index of a group if the list of groups is very long.
     * Hence, finding expenses based on the specified group name is more appropriate.
+
+
+### Delete Expense Feature
+
+The delete expense mechanism is facilitated by the addition of an `ExpenseList` field within the `AddressBook` object maintained by the model.
+Each `Expense` belongs to a `Group` object, also maintained within the `AddressBook`.
+Deletion of an expense must be accompanied by deletion of the expense from the `Group` object to which it belongs.
+The command allows the user to delete an expense based on the index position of the expense in the page viewed by the user.
+This means that the user is constrained to only being permitted to delete expenses when they are viewing a list of expenses; that is, after they enter the `findexpenses` or `expenses` command.
+
+The following activity diagram shows what happens when a user executes a `deleteexpense` command.
+
+![DeleteExpenseActivityDiagram](images/DeleteExpenseActivityDiagram.png)
+
+Given below is an example usage scenario and how the `deleteexpense` mechanism behaves at each step.
+
+Step 1. A valid `deleteexpense` command is given as user input. This prompts the `LogicManager` to run its execute()
+method.
+
+Step 2. The `DeleteExpenseCommandParser` parses the input and checks for presence of the `INDEX` input.
+It returns a `DeleteExpenseCommand`.
+
+Step 3. `DeleteExpenseCommand` runs its execute() method which checks if the `INDEX` entered is within the range of the size of the list of expneses seen by the user.
+If so, the `Expense` at the `INDEX` position is deleted from the `ExpenseList`. The `ObservableList` within `ExpenseList` is updated, meaniing the UI updates and the user can see the new list of expenses, without the deleted expense.
+
+Step 4. The `Group` to which this expense belongs is retrieved from the `ExpenseList`.
+The expense is subsequently deleted from the `expenses` field present in the `Group` object.
+The updated `Group` is then placed back into the `GroupList` within the `AddressBook`.
+
+Step 5: Upon successful execution, `CommandResult` is returned.
+
+
+The following sequence operation shows how the `deleteexpense` operation works.
+![DeleteExpenseSequenceDiagram](images/DeleteExpenseSequenceDiagram.png)
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `DeleteExpenseCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
+</div>
+
+#### Design considerations
+
+**Aspect: User command for deleteexpense:**
+
+* **Alternative 1 (current choice):** Delete based on index position in `ObservableList`
+    * Pros: Easy to implement.
+    * Pros: Short user command.
+    * Cons: Less intuitive for user.
+    * Cons: Easy for user to make an erroneous command.
+
+* **Alternative 2 (description based):** Delete based on `description`
+    * Pros: Easy to implement.
+    * Pros: Difficult for user to make an erroneous command.
+    * Cons: Long user command.
+    * Cons: Requires imposition of constraint that expense description names are unique.
+
+
+* **Justification**
+    * Expenses, unlike Groups, do not contain a large volume of information.
+    * This information is unrecoverable once deleted.
+    * However, the damage to a user as a result of an error is not significant. The user can re-enter the details with a single command.
+    * Therefore, the need to protect the user from erroneous decisions is not significant.
+    * Furthermore, many expenses are likely to have similar descriptions. Constraining users to using unique descriptions for expenses is likely to compromise the user experience.
+    * As such, it is better to choose Alternative 1, as this allows the user to quickly delete expenses, and not compromise on the flexibility of the user.
+
+### Calculate Payments Feature
+
+The purpose of this feature is to provide users with a simple set of transactions that would allow all debts within the group to be settled.
+The UI mechanism is facilitated by the addition of a `PaymentList` field of `Payment` objects, present within the `AddressBook` object maintained by the model.
+The functionality of this feature is facilitated by the fact that group objects maintain two hashmaps: -
+* `paidByPayers`, which maintains how much each member of the group has paid (total payments) during the course of the trip.
+* `splitExpenses`, which maintains how much expenditure each member of the group has incurred (total expenditure) during the course of the trip.
+These maps allow calculations with respect to how much each individual is owed, and how much each individual owes.
+  
+#### The Algorithm
+The invariant maintained is that the sum of all payments made (values within `paidByPayers`) should equal the total expenditures incurred by the group (values within `splitExpenses`).
+Define surplus as the net amount each individual is owed by others. This ultimately means that some members have negative surplus, and some have positive surplus.
+The goal is to ensure that the deficits balance the surpluses with the minimum number of transactions.
+To assist with the tracking of each individual and their surplus, an inner `Pair` class was created with a `Person` field and a primitive double field for the surplus.
+
+* Initialise an empty list of Pairs and an empty list of `Payment` objects.
+
+* Iterate through the `members` of the group and retrieve each individual's total payments and total expenditures.
+
+* Calculate the surplus of each individual by subtracting their total expenditures from their total payments.
+Initialise a `Pair` object with the `Person` object of the individual, and their surplus. Add this pair to the list if the surplus is not 0.
+
+* Iterate until the list is empty and perform the following steps.
+  * Sort the list in ascending order of surplus. This means that those who owe more are placed in the earlier part of the list and those who are owed more are placed towards the end of the `Pair` list.
+  * Retrieve the first `Pair` and last `Pair` in the list. It is invariant that the first pair will have negative surplus and the last pair will have positive surplus.
+  * Check to see which pair has a smaller magnitude. Define this value to be `SMALL_VAL`.
+  * Create a `Payment` object with a `Cost` of `SMALL_VAL`, and payee and payer as the two individuals within the first pair and last pair retrieved respectively. Add this `Payment` object to the list of `Payment` objects.
+  * If the pairs do not have equal magnitude, remove the pair with the surplus value of smaller magnitude from the list. Calculate the new surplus value of the other pair to be the sum of the surpluses of both pairs. Update the other pair with this new surplus value and place it back into the list.
+  * If the pairs do have equal magnitude, remove both pairs from the list.
+  
+* Return the list of `Payment` objects.
+
+The following diagram shows the flow of the algorithm.
+
+![CalculatePaymentsAlgorithmDiagram](images/CalculatePaymentsCommandAlgorithmDiagram.png)
+  
+
+The following activity diagram shows what happens when a user executes a `calculatepayments` command.
+
+![CalculatePaymentsActivityDiagram](images/CalculatePaymentsActivityDiagram.png)
+
+Given below is an example usage scenario and how the `calculatepayments` mechanism behaves at each step.
+
+Step 1. A valid `calculatepayments` command is given as user input. This prompts the `LogicManager` to run its execute()
+method.
+
+Step 2. The `CalculatePaymentsCommandParser` parses the input and checks for presence of the `GROUP_NAME` prefix.
+It checks that the `GROUP_NAME` is valid (does not have any non-alphanumeric characters).
+It returns a `CalculatePaymentsCommand`.
+
+Step 3. `CalculatePaymentsCommand` runs its execute() method which checks if a group with the `GROUP_NAME` entered by the user has been
+created in the past. If so, this group is retrieved from the model.
+
+Step 4. Subsequently, the **Algorithm** is used to tabulate a list of `Payment` objects.
+
+Step 5. The `PaymentList` field is updated with the generated list of payments, triggering a change in the UI to show the user the list of payments.
+
+Step 6. Upon successful execution, `CommandResult` is returned.
+
+
+The following sequence operation shows how the `calculatepayments` operation works.
+![DeleteExpenseSequenceDiagram](images/CalculatePaymentsSequenceDiagram.png)
+
+<div markdown="span" class="alert alert-info">:information_source: **Note:** The lifeline for `CalculatePaymentsCommandParser` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
+</div>
+
+#### Design considerations
+
+**Aspect: Algorithm utilised for calculatepayments:**
+
+* **Alternative 1 (current choice):** Prioritise settling of bigger debts 
+    * Pros: Easy to implement.
+    * Pros: Smaller number of transactions.
+    * Cons: Larger value transactions.
+
+* **Alternative 2:** Prioritise settling of smaller debts
+    * Pros: Smaller value transactions.
+    * Cons: Greater number of transactions.
+    * Cons: More difficult to implement.
+
+* **Justification**
+    * The size of the transaction matters less to the user than the volume of transactions.
+    * Moreover, an easier implementation reduces the possibility of bugs.
+    * As such, we chose to prioritise the settling of bigger debts in our algorithm.
+  
+
+### UI Display
+AWE has multiple lists / views to display such as for `groups`, `contacts` and `expenses`.
+
+The display, called view panel, will only be able to show up 1 view at a time depending on the command. It is of upmost importance to get it to display the correct view.
+
+To achieve the toggling between each view panels, we implemented the following:
+* An enumeration `UiView` to contain the following `CONTACT_PAGE`, `GROUP_PAGE`, `EXPENSE_PAGE`, `TRANSACTION_SUMMARY`, `PAYMENT_PAGE`. Each enum represents a different view.
+* `CommandResult` was given 6 more boolean fields, each representing a different view as well.
+* `MainWindow` checks for the 6 boolean fields in `CommandResult` and passes `UiView` to `ViewPanel` for toggling the view.
+
+The following activity diagram shows how the `MainWindow` checks and sends the `UiView` to `ViewPanel`. 
+<br>
+<img src="images/UiTogglingActivityDiagram.png" width="500" />
+
+#### Proposed Implementation
+**Aspect: Navigating between different view**
+
+* **Alternative 1**: Make use of JavaFx's tab
+    * Pros: Easy to implement.
+    * Cons: Unable to fully customised the layout. Have to use the standard JavaFx's tab layout.
+  
+* **Alternative 2 (current choice)**: Replacing the child of the view panel node<br>
+    (Refer to [JavaFx tutorial](https://se-education.org/guides/tutorials/javaFxPart1.html) for more information about JavaFx)
+    * Pros: More customisable in terms of layout.
+    * Pros: Able to make use of existing codes.
+    * Cons: More classes to implement to handle the toggling between views.
+    
+* **Justification**
+    * We want to place the command result display below the buttons according to our [wireframe](https://www.figma.com/file/VwuDOdHr7CSyDUWb4Kwkmx/CS2103T-tP?node-id=0%3A1).
+    * Using JavaFx's tab will not let us customise the layout as such.
+    * Hence, replacing the child of a view panel is more appropriate.
+    
+### Ui Navigation Buttons
+To improve the usability of AWE, buttons are implemented into the Ui to allow switching of view easily.
+
+However, only 2 main views can be toggled by the buttons - Contacts page and Groups page.
+
+To achieve this, the following is implemented:
+* 2 buttons (`GroupViewButton` and `ContactViewButton`) for the user to click.
+* Event listener for each button - `GroupButtonListener` and `ContactButtonListener`. The event listener works by calling `ViewPanel#toggleView` when the button is clicked.
+
+Given below is an example usage scenario and how the button mechanism behaves at each step. In this example, the button used is `GroupViewButton` but it can also be replaced with `ContactViewButton`.
+
+Step 1. When `GroupViewButton` is initiated, an event listener `GroupButtonListener` is created and used.
+
+Step 2. Once the user clicks on `GroupViewButton`, the event listener will trigger and the `GroupButtonListener#handle` will run. This calls `ViewPanel#toggleView` and passes `UiView.GROUP_PAGE` as parameters. 
+
+Step 3. `ViewPanel` will change the child of itself to `ContactListPanel` (Refer to [JavaFx tutorial](https://se-education.org/guides/tutorials/javaFxPart1.html) for more information about JavaFx). Hence, GUI will update to show contact page
 
 
 ### \[Proposed\] Undo/redo feature
@@ -784,7 +1066,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Use case: Add Expense**
 
-**Preconditions: User has selected a travel group**
+**Preconditions: User has is a member of the specified travel group**
 
 **MSS**
 

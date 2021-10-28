@@ -2,6 +2,8 @@ package seedu.awe.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.awe.commons.core.Messages.MESSAGE_DELETEGROUPCOMMAND_GROUP_DOES_NOT_EXIST;
+import static seedu.awe.commons.core.Messages.MESSAGE_DELETEGROUPCOMMAND_SUCCESS;
 import static seedu.awe.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.awe.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.awe.testutil.TypicalGroups.BALI;
@@ -28,10 +30,11 @@ public class DeleteGroupCommandTest {
         Group groupToDelete = BALI;
         DeleteGroupCommand deleteGroupCommand = new DeleteGroupCommand(groupToDelete);
 
-        String expectedMessage = String.format(DeleteGroupCommand.MESSAGE_SUCCESS, groupToDelete.getGroupName(),
-                groupToDelete.getMembers().size());
+        CommandResult commandResult = new CommandResult(String.format(MESSAGE_DELETEGROUPCOMMAND_SUCCESS,
+                groupToDelete.getGroupName(), groupToDelete.getMembers().size()), false, false,
+                true, false, false, false, false);
 
-        assertCommandSuccess(deleteGroupCommand, model, expectedMessage, model);
+        assertCommandSuccess(deleteGroupCommand, model, commandResult, model);
     }
 
     @Test
@@ -40,7 +43,7 @@ public class DeleteGroupCommandTest {
         Group groupNotInModel = VIENNA_NOT_IN_GROUPS;
         DeleteGroupCommand deleteGroupCommand = new DeleteGroupCommand(groupNotInModel);
 
-        assertCommandFailure(deleteGroupCommand, model, DeleteGroupCommand.MESSAGE_GROUP_DOES_NOT_EXIST);
+        assertCommandFailure(deleteGroupCommand, model, MESSAGE_DELETEGROUPCOMMAND_GROUP_DOES_NOT_EXIST);
     }
 
     @Test

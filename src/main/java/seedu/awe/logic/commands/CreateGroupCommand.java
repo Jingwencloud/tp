@@ -1,6 +1,10 @@
 package seedu.awe.logic.commands;
 import static java.util.Objects.requireNonNull;
+import static seedu.awe.commons.core.Messages.MESSAGE_CREATEGROUPCOMMAND_DUPLICATE_GROUP;
+import static seedu.awe.commons.core.Messages.MESSAGE_CREATEGROUPCOMMAND_ERROR;
+import static seedu.awe.commons.core.Messages.MESSAGE_CREATEGROUPCOMMAND_SUCCESS;
 import static seedu.awe.commons.util.CollectionUtil.requireAllNonNull;
+import static seedu.awe.model.Model.PREDICATE_SHOW_ALL_GROUPS;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -17,12 +21,6 @@ import seedu.awe.model.tag.Tag;
 
 public class CreateGroupCommand extends Command {
     public static final String COMMAND_WORD = "creategroup";
-    public static final String MESSAGE_SUCCESS = "New group created";
-    public static final String MESSAGE_ERROR = "Group not created. Be sure to use the exact names of group members";
-    public static final String MESSAGE_DUPLICATE_GROUP = "This group already exists";
-    public static final String MESSAGE_USAGE = "creategroup gn/[GROUPNAME] n/[NAME1] n/[OPTIONAL NAME2]...";
-    public static final String MESSAGE_EMPTY_GROUP = "Group requires at least 1 member. \n%1$s\n%s";
-    public static final String MESSAGE_INVALID_NAMES = "None of the names are in your contact book.";
 
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
     private final ArrayList<Person> members;
@@ -90,17 +88,18 @@ public class CreateGroupCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         if (!isValidCommand) {
-            return new CommandResult(MESSAGE_ERROR);
+            return new CommandResult(MESSAGE_CREATEGROUPCOMMAND_ERROR);
         }
 
         Group group = new Group(groupName, members, tags);
         if (model.hasGroup(group)) {
-            throw new CommandException(MESSAGE_DUPLICATE_GROUP);
+            throw new CommandException(MESSAGE_CREATEGROUPCOMMAND_DUPLICATE_GROUP);
         }
         model.addGroup(group);
         model.setAllMembersOfGroup(group);
         logger.fine("Created group \"" + group.getGroupName() + "\"");
-        return new CommandResult(MESSAGE_SUCCESS);
+        model.updateFilteredGroupList(PREDICATE_SHOW_ALL_GROUPS);
+        return new CommandResult(MESSAGE_CREATEGROUPCOMMAND_SUCCESS, false, false, true, false, false, false, false);
     }
 
     @Override

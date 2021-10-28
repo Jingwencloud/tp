@@ -1,0 +1,57 @@
+@startuml
+!include style.puml
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AweParser" as AweParser LOGIC_COLOR
+participant ":CalculatePaymentsCommand" as CalculatePaymentsCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("calculatepayments gn/Bali")
+activate LogicManager
+
+LogicManager -> AweParser : parseCommand("calculatepayments gn/Bali")
+activate AweParser
+
+/'Clarify with tutor if there is a need to display CalculatePaymentsCommandParser class within the ref'/
+ref over AweParser, CalculatePaymentsCommand:get calculatePaymentsCommand
+create CalculatePaymentsCommand
+AweParser -> CalculatePaymentsCommand
+
+
+AweParser --> LogicManager : calculatePaymentsCommand
+deactivate AweParser
+
+LogicManager -> CalculatePaymentsCommand : execute()
+activate CalculatePaymentsCommand
+
+CalculatePaymentsCommand -> Model : getGroupByName(GroupName("Bali"))
+activate Model
+Model --> CalculatePaymentsCommand : group
+deactivate Model
+
+CalculatePaymentsCommand -> CalculatePaymentsCommand : payments:getPayments(group)
+
+CalculatePaymentsCommand -> Model : setPayments(payments)
+activate Model
+Model --> CalculatePaymentsCommand
+deactivate Model
+
+create CommandResult
+CalculatePaymentsCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> CalculatePaymentsCommand : result
+deactivate CommandResult
+
+CalculatePaymentsCommand --> LogicManager : result
+deactivate CalculatePaymentsCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml

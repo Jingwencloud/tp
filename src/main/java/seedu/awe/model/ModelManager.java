@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.awe.commons.core.GuiSettings;
 import seedu.awe.commons.core.LogsCenter;
+import seedu.awe.logic.commands.exceptions.CommandException;
 import seedu.awe.model.expense.Cost;
 import seedu.awe.model.expense.Expense;
 import seedu.awe.model.group.Group;
@@ -31,7 +32,7 @@ public class ModelManager implements Model {
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
     private final FilteredList<Group> filteredGroups;
-    private final FilteredList<Expense> expenses;
+    private final FilteredList<Expense> filteredExpenses;
     private final FilteredList<TransactionSummary> transactionSummary;
     private final FilteredList<Payment> payments;
 
@@ -48,7 +49,7 @@ public class ModelManager implements Model {
         this.userPrefs = new UserPrefs(userPrefs);
         filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
         filteredGroups = new FilteredList<>(this.addressBook.getGroupList());
-        expenses = new FilteredList<>(this.addressBook.getExpenseList());
+        filteredExpenses = new FilteredList<>(this.addressBook.getExpenseList());
         transactionSummary = new FilteredList<>(this.addressBook.getTransactionSummaryList());
         payments = new FilteredList<>(this.addressBook.getPaymentList());
     }
@@ -102,6 +103,12 @@ public class ModelManager implements Model {
     @Override
     public ReadOnlyAddressBook getAddressBook() {
         return addressBook;
+    }
+
+    @Override
+    public Group getActiveGroupFromAddressBook() throws CommandException {
+        return addressBook.getGroupFromExpenseList().orElseThrow(() ->
+                new CommandException("Sorry! The operation could not be completed!"));
     }
 
     //=========== Person ================================================================================
@@ -281,6 +288,16 @@ public class ModelManager implements Model {
 
     //=========== Filtered Expense List Accessors =============================================================
 
+    /** Checks if the current expense list belongs to the
+     * specified group.
+     *
+     * @return true if expense list belongs to the group.
+     */
+    @Override
+    public boolean isCurrentExpenseList(Group group) {
+        return addressBook.isCurrentExpenseList(group);
+    }
+
     /**
      * Returns the current list of expenses.
      *
@@ -288,13 +305,20 @@ public class ModelManager implements Model {
      */
     @Override
     public ObservableList<Expense> getExpenses() {
-        return expenses;
+        return filteredExpenses;
     }
+
+    @Override
+    public Expense getExpense(int index) {
+        return filteredExpenses.get(index);
+    }
+
+
 
     @Override
     public void updateFilteredExpenseList(Predicate<Expense> predicate) {
         requireNonNull(predicate);
-        expenses.setPredicate(predicate);
+        filteredExpenses.setPredicate(predicate);
     }
 
     @Override

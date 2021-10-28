@@ -1,5 +1,9 @@
 package seedu.awe.logic.commands;
 import static java.util.Objects.requireNonNull;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPADDCONTACTCOMMAND_DUPLICATE_PERSON;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPADDCONTACTCOMMAND_ERROR;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPADDCONTACTCOMMAND_SUCCESS;
+import static seedu.awe.commons.core.Messages.MESSAGE_NONEXISTENT_GROUP;
 import static seedu.awe.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.ArrayList;
@@ -10,14 +14,10 @@ import seedu.awe.model.Model;
 import seedu.awe.model.group.Group;
 import seedu.awe.model.group.GroupName;
 import seedu.awe.model.person.Person;
+import seedu.awe.model.person.exceptions.DuplicatePersonException;
 
 public class GroupAddContactCommand extends Command {
     public static final String COMMAND_WORD = "groupaddcontact";
-    public static final String MESSAGE_SUCCESS = "New member(s) added to group";
-    public static final String MESSAGE_ERROR = "Contact(s) not added. Be sure to use the exact names of group members";
-    public static final String MESSAGE_DUPLICATE_PERSON = "%1$s is already in the group";
-    public static final String MESSAGE_USAGE = "groupaddcontact gn/[GROUPNAME] n/[NAME1] n/[OPTIONAL NAME2]";
-    public static final String MESSAGE_NONEXISTENT_GROUP = "Group %1$s does not exist.";
 
     private final GroupName groupName;
     private final ArrayList<Person> newMembers;
@@ -82,24 +82,27 @@ public class GroupAddContactCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         if (!isValidCommand) {
-            throw new CommandException(MESSAGE_ERROR);
+            throw new CommandException(MESSAGE_GROUPADDCONTACTCOMMAND_ERROR);
         }
 
         Group oldGroup = model.getGroupByName(groupName);
         if (Objects.isNull(oldGroup)) {
             throw new CommandException(String.format(MESSAGE_NONEXISTENT_GROUP, groupName));
         }
-        ArrayList<Person> membersFromOldGroup = oldGroup.getMembers();
-        for (Person member : newMembers) {
-            if (membersFromOldGroup.contains(member)) {
-                throw new CommandException(String.format(MESSAGE_DUPLICATE_PERSON, member.getName()));
+
+        Group newGroup = oldGroup;
+        for (Person member: newMembers) {
+            try {
+                newGroup = newGroup.addMember(member);
+            } catch (DuplicatePersonException exception) {
+                throw new CommandException(
+                        String.format(MESSAGE_GROUPADDCONTACTCOMMAND_DUPLICATE_PERSON, member.getName()));
             }
         }
-        newMembers.addAll(membersFromOldGroup);
-        Group newGroup = new Group(groupName, newMembers, oldGroup.getTags());
+
         model.setGroup(oldGroup, newGroup);
         model.setAllMembersOfGroup(newGroup);
-        return new CommandResult(MESSAGE_SUCCESS);
+        return new CommandResult(MESSAGE_GROUPADDCONTACTCOMMAND_SUCCESS);
     }
 
     @Override

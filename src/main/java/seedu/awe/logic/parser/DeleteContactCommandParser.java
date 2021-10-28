@@ -1,5 +1,6 @@
 package seedu.awe.logic.parser;
 
+import static seedu.awe.commons.core.Messages.MESSAGE_DELETECONTACTCOMMAND_USAGE;
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import seedu.awe.commons.core.index.Index;
@@ -9,7 +10,7 @@ import seedu.awe.logic.parser.exceptions.ParseException;
 /**
  * Parses input arguments and creates a new DeleteCommand object
  */
-public class DeleteCommandParser implements Parser<DeleteContactCommand> {
+public class DeleteContactCommandParser implements Parser<DeleteContactCommand> {
 
     /**
      * Parses the given {@code String} of arguments in the context of the DeleteCommand
@@ -22,7 +23,7 @@ public class DeleteCommandParser implements Parser<DeleteContactCommand> {
             return new DeleteContactCommand(index);
         } catch (ParseException pe) {
             throw new ParseException(
-                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteContactCommand.MESSAGE_USAGE), pe);
+                    String.format(MESSAGE_INVALID_COMMAND_FORMAT, MESSAGE_DELETECONTACTCOMMAND_USAGE), pe);
         }
     }
 

@@ -1,0 +1,29 @@
+@startuml
+start
+-> Receive Group object;
+:Initialise an empty list of Pairs
+Initialise an empty list of Payments;
+
+:Iterate over group members
+Retrieve total payments and expenditures;
+
+:Calculate the surplus of each individual
+Populate pair list with Persons with non-zero surpluses;
+
+while (pair list is not empty)
+:Sort the list in ascending order of surplus;
+:Retrieve the first Pair and last Pair in the list;
+:Check to see which pair has a smaller magnitude
+Define this value to be SMALL_VAL;
+:Create a Payment object with a Cost SMALL_VAL
+Payee is Person from first pair
+Payer is Person from last pair;
+    if () then ([pairs do not have equal magnitude])
+    :Remove pair with SMALL_VAL from list;
+    :Decrease Cost of other pair by SMALL_VAL;
+    else ([else])
+    :Remove both pairs from list;
+    endif
+endwhile
+stop
+@enduml

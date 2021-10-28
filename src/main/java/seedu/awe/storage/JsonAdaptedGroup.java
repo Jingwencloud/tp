@@ -3,7 +3,6 @@ package seedu.awe.storage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,9 +10,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.awe.commons.exceptions.IllegalValueException;
-import seedu.awe.model.expense.Cost;
 import seedu.awe.model.expense.Expense;
-import seedu.awe.model.expense.IndividualAmount;
 import seedu.awe.model.group.Group;
 import seedu.awe.model.group.GroupName;
 import seedu.awe.model.person.Person;
@@ -64,12 +61,6 @@ public class JsonAdaptedGroup {
                 .stream()
                 .map(JsonAdaptedExpense::new)
                 .collect(Collectors.toList()));
-        Map<Person, Cost> paidByPayers = source.getPaidByPayers();
-        Map<Person, Cost> paidByPayees = source.getPaidByPayees();
-        List<IndividualAmount> individualAmountPaid = StorageUtils
-                .convertExpenseMapToListOfIndividualAmounts(paidByPayers);
-        List<IndividualAmount> individualExpenseIncurred = StorageUtils
-                .convertExpenseMapToListOfIndividualAmounts(paidByPayees);
     }
 
     /**
@@ -86,8 +77,10 @@ public class JsonAdaptedGroup {
         for (JsonAdaptedTag tag : tags) {
             groupTags.add(tag.toModelType());
         }
+
         final ArrayList<Expense> modelExpenses = new ArrayList<>();
-        modelExpenses.addAll(StorageUtils.convertAdaptedExpensesToExpenses(expenses));
+
+        modelExpenses.addAll(StorageUtil.convertAdaptedExpensesToExpenses(expenses));
 
         if (groupName == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
@@ -100,15 +93,9 @@ public class JsonAdaptedGroup {
 
         final Set<Tag> modelTags = new HashSet<>(groupTags);
 
+        Group group = new Group(modelName, modelMembers, modelTags, modelExpenses);
 
-
-        Map<Person, Cost> paidByPayers = StorageUtils
-                .buildPayerMapFromListOfExpenses(modelExpenses, modelMembers);
-
-        Map<Person, Cost> paidByPayees = StorageUtils
-                .buildIndividualExpenditureMapFromListOfExpenses(modelExpenses, modelMembers);
-
-        return new Group(modelName, modelMembers, modelTags, modelExpenses, paidByPayers, paidByPayees);
+        return group;
     }
 
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import seedu.awe.commons.exceptions.IllegalValueException;
 import seedu.awe.model.expense.IndividualAmount;
 
-class JsonAdaptedIndividualAmount {
+public class JsonAdaptedIndividualAmount {
 
     private JsonAdaptedPerson person;
     private String expenditure;

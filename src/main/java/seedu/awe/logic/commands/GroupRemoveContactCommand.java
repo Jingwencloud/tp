@@ -1,6 +1,9 @@
 package seedu.awe.logic.commands;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPREMOVECONTACT_ERROR;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPREMOVECONTACT_SUCCESS;
+import static seedu.awe.commons.core.Messages.MESSAGE_NONEXISTENT_GROUP;
 import static seedu.awe.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.ArrayList;
@@ -14,11 +17,6 @@ import seedu.awe.model.person.Person;
 
 public class GroupRemoveContactCommand extends Command {
     public static final String COMMAND_WORD = "groupremovecontact";
-    public static final String MESSAGE_SUCCESS = "Member(s) removed from group";
-    public static final String MESSAGE_ERROR = "Contact(s) not removed from group."
-                                                + "Be sure to use the exact names of group members";
-    public static final String MESSAGE_USAGE = "groupremovecontact gn/[GROUPNAME] n/[NAME1] n/[OPTIONAL NAME2]";
-    public static final String MESSAGE_NONEXISTENT_GROUP = "Group %1$s does not exist.";
 
     private final GroupName groupName;
     private final ArrayList<Person> membersToBeRemoved;
@@ -70,42 +68,49 @@ public class GroupRemoveContactCommand extends Command {
     }
 
     /**
-     * Returns List of Person objects representing the remaining members after removing a given list of members.
+     * Checks if the list of person to be remove is contained in the original list.
      *
      * @param membersFromOldGroup List of Person objects representing original members in a group.
      * @param membersToBeRemoved List of Person objects representing members to be removed from a group.
-     * @return List of Person objects representing the remaining members after removing a given list of members
-     * @throws CommandException If member to be removed is not present in the List of original members.
+     * @return Whether the list to remove person is valid
      */
-    public ArrayList<Person> removeMembers(ArrayList<Person> membersFromOldGroup,
-                                           ArrayList<Person> membersToBeRemoved) throws CommandException {
+    public boolean checkRemoveMembers(ArrayList<Person> membersFromOldGroup,
+                                           ArrayList<Person> membersToBeRemoved) {
         ArrayList<Person> remainingMembers = new ArrayList<>(membersFromOldGroup);
         for (Person memberToBeRemoved : membersToBeRemoved) {
             boolean memberToBeRemovedIsPresent = remainingMembers.remove(memberToBeRemoved);
             if (!memberToBeRemovedIsPresent) {
-                throw new CommandException(MESSAGE_ERROR);
+                return false;
             }
         }
-        return remainingMembers;
+        return true;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         if (!isValidCommand) {
-            throw new CommandException(MESSAGE_ERROR);
+            throw new CommandException(MESSAGE_GROUPREMOVECONTACT_ERROR);
         }
 
         Group oldGroup = model.getGroupByName(groupName);
         if (Objects.isNull(oldGroup)) {
             throw new CommandException(String.format(MESSAGE_NONEXISTENT_GROUP, groupName));
         }
+
         ArrayList<Person> membersFromOldGroup = oldGroup.getMembers();
-        ArrayList<Person> remainingMembers = removeMembers(membersFromOldGroup, membersToBeRemoved);
-        Group newGroup = new Group(groupName, remainingMembers, oldGroup.getTags());
+        if (!checkRemoveMembers(membersFromOldGroup, membersToBeRemoved)) {
+            throw new CommandException(MESSAGE_GROUPREMOVECONTACT_ERROR);
+        }
+
+        Group newGroup = oldGroup;
+        for (Person member: membersToBeRemoved) {
+            newGroup = newGroup.removeMember(member);
+        }
+
         model.setGroup(oldGroup, newGroup);
         model.setAllMembersOfGroup(oldGroup);
-        return new CommandResult(MESSAGE_SUCCESS);
+        return new CommandResult(MESSAGE_GROUPREMOVECONTACT_SUCCESS);
     }
 
     @Override

@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.awe.commons.core.Messages.MESSAGE_ADDCONTACTCOMMAND_DUPLICATE;
+import static seedu.awe.commons.core.Messages.MESSAGE_ADDCONTACTCOMMAND_SUCCESS;
 import static seedu.awe.testutil.Assert.assertThrows;
 
 import java.nio.file.Path;
@@ -46,7 +48,7 @@ public class AddContactCommandTest {
 
         CommandResult commandResult = new AddContactCommand(validPerson).execute(modelStub);
 
-        assertEquals(String.format(AddContactCommand.MESSAGE_SUCCESS, validPerson), commandResult.getFeedbackToUser());
+        assertEquals(String.format(MESSAGE_ADDCONTACTCOMMAND_SUCCESS, validPerson), commandResult.getFeedbackToUser());
         assertEquals(Arrays.asList(validPerson), modelStub.personsAdded);
     }
 
@@ -57,7 +59,7 @@ public class AddContactCommandTest {
         ModelStub modelStub = new ModelStubWithPerson(validPerson);
 
         assertThrows(CommandException.class,
-                AddContactCommand.MESSAGE_DUPLICATE_PERSON, () -> addContactCommand.execute(modelStub));
+                MESSAGE_ADDCONTACTCOMMAND_DUPLICATE, () -> addContactCommand.execute(modelStub));
     }
 
     @Test
@@ -134,6 +136,11 @@ public class AddContactCommandTest {
         }
 
         @Override
+        public Group getActiveGroupFromAddressBook() throws CommandException {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
         public boolean hasPerson(Person person) {
             throw new AssertionError("This method should not be called.");
         }
@@ -180,7 +187,7 @@ public class AddContactCommandTest {
 
         @Override
         public void setPayments(List<Payment> payments) {
-
+            throw new AssertionError("This method should not be called.");
         }
 
         /**
@@ -245,6 +252,16 @@ public class AddContactCommandTest {
         @Override
         public ObservableList<TransactionSummary> getTransactionSummary() {
             throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public boolean isCurrentExpenseList(Group group) {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Expense getExpense(int index) {
+            return null;
         }
     }
 

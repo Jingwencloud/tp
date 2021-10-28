@@ -1,11 +1,8 @@
 package seedu.awe.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.awe.logic.parser.CliSyntax.PREFIX_ADDRESS;
-import static seedu.awe.logic.parser.CliSyntax.PREFIX_EMAIL;
-import static seedu.awe.logic.parser.CliSyntax.PREFIX_NAME;
-import static seedu.awe.logic.parser.CliSyntax.PREFIX_PHONE;
-import static seedu.awe.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.awe.commons.core.Messages.MESSAGE_ADDCONTACTCOMMAND_DUPLICATE;
+import static seedu.awe.commons.core.Messages.MESSAGE_ADDCONTACTCOMMAND_SUCCESS;
 
 import seedu.awe.logic.commands.exceptions.CommandException;
 import seedu.awe.model.Model;
@@ -17,24 +14,6 @@ import seedu.awe.model.person.Person;
 public class AddContactCommand extends Command {
 
     public static final String COMMAND_WORD = "addcontact";
-
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a person to the awe book. "
-            + "Parameters: "
-            + PREFIX_NAME + "NAME "
-            + PREFIX_PHONE + "PHONE "
-            + PREFIX_EMAIL + "EMAIL "
-            + PREFIX_ADDRESS + "ADDRESS "
-            + "[" + PREFIX_TAG + "TAG]...\n"
-            + "Example: " + COMMAND_WORD + " "
-            + PREFIX_NAME + "John Doe "
-            + PREFIX_PHONE + "98765432 "
-            + PREFIX_EMAIL + "johnd@example.com "
-            + PREFIX_ADDRESS + "311, Clementi Ave 2, #02-25 "
-            + PREFIX_TAG + "friends "
-            + PREFIX_TAG + "owesMoney";
-
-    public static final String MESSAGE_SUCCESS = "New person added: %1$s";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the awe book";
 
     private final Person toAdd;
 
@@ -51,11 +30,11 @@ public class AddContactCommand extends Command {
         requireNonNull(model);
 
         if (model.hasPerson(toAdd)) {
-            throw new CommandException(MESSAGE_DUPLICATE_PERSON);
+            throw new CommandException(MESSAGE_ADDCONTACTCOMMAND_DUPLICATE);
         }
 
         model.addPerson(toAdd);
-        return new CommandResult(String.format(MESSAGE_SUCCESS, toAdd));
+        return new CommandResult(String.format(MESSAGE_ADDCONTACTCOMMAND_SUCCESS, toAdd));
     }
 
     @Override

@@ -48,13 +48,14 @@ public class SampleDataUtil {
 
     public static Expense[] getSampleExpenses() {
         Person[] members = getSamplePersons();
+
         return new Expense[] {
-            new Expense(members[0], new Cost("10"), new Description("Transportation")),
-            new Expense(members[1], new Cost("300"), new Description("Buffet")),
-            new Expense(members[2], new Cost("60"), new Description("Souvenirs")),
-            new Expense(members[3], new Cost("200"), new Description("Entry Tickets")),
-            new Expense(members[3], new Cost("150"), new Description("Lunch")),
-            new Expense(members[4], new Cost("180"), new Description("Supper"))
+            new Expense(members[0], new Cost("10"), new Description("Transportation"), addSampleMembers(0, 3)),
+            new Expense(members[1], new Cost("300"), new Description("Buffet"), addSampleMembers(0, 3)),
+            new Expense(members[2], new Cost("60"), new Description("Souvenirs"), addSampleMembers(0, 3)),
+            new Expense(members[3], new Cost("200"), new Description("Entry Tickets"), addSampleMembers(3, 6)),
+            new Expense(members[3], new Cost("150"), new Description("Lunch"), addSampleMembers(3, 6)),
+            new Expense(members[4], new Cost("180"), new Description("Supper"), addSampleMembers(3, 6))
         };
     }
 

@@ -1,6 +1,8 @@
 package seedu.awe.logic.parser;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.awe.commons.core.Messages.MESSAGE_CREATEGROUPCOMMAND_EMPTY_GROUP;
+import static seedu.awe.commons.core.Messages.MESSAGE_CREATEGROUPCOMMAND_INVALID_NAMES;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +13,6 @@ import java.util.stream.Stream;
 
 import seedu.awe.commons.core.index.Index;
 import seedu.awe.commons.util.StringUtil;
-import seedu.awe.logic.commands.CreateGroupCommand;
 import seedu.awe.logic.parser.exceptions.EmptyGroupException;
 import seedu.awe.logic.parser.exceptions.ParseException;
 import seedu.awe.model.expense.Cost;
@@ -181,8 +182,10 @@ public class ParserUtil {
             isValid = true;
         }
         if (invalidCount == names.size()) {
-            throw new EmptyGroupException(String.format(CreateGroupCommand.MESSAGE_EMPTY_GROUP,
-                    CreateGroupCommand.MESSAGE_INVALID_NAMES, CreateGroupCommand.MESSAGE_INVALID_NAMES));
+            throw new EmptyGroupException(
+                    String.format(MESSAGE_CREATEGROUPCOMMAND_EMPTY_GROUP,
+                            MESSAGE_CREATEGROUPCOMMAND_INVALID_NAMES,
+                            MESSAGE_CREATEGROUPCOMMAND_INVALID_NAMES));
         }
         memberNameList.addAll(memberNameSet);
         return memberNameList;

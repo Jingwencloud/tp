@@ -1,7 +1,6 @@
 package seedu.awe.model.payment;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.awe.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.util.Iterator;
 import java.util.List;
@@ -10,8 +9,6 @@ import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import seedu.awe.model.group.Group;
-import seedu.awe.model.payment.exceptions.PaymentNotFoundException;
-import seedu.awe.model.person.exceptions.DuplicatePersonException;
 
 public class PaymentList implements Iterable<Payment> {
 
@@ -23,7 +20,13 @@ public class PaymentList implements Iterable<Payment> {
     public PaymentList() {
         group = Optional.empty();
     }
+
+    /**
+     * List of payments.
+     * @param group group from which payments are generated.
+     */
     public PaymentList(Group group) {
+        requireNonNull(group);
         this.group = Optional.of(group);
     }
 
@@ -65,49 +68,6 @@ public class PaymentList implements Iterable<Payment> {
     public void add(Payment toAdd) {
         requireNonNull(toAdd);
         internalList.add(toAdd);
-    }
-
-    /**
-     * Replaces the payment {@code target} in the list with {@code editedPayment}.
-     * {@code target} must exist in the list.
-     */
-    public void setPayment(Payment target, Payment editedPayment) {
-        requireAllNonNull(target, editedPayment);
-
-        int index = internalList.indexOf(target);
-        if (index == -1) {
-            throw new PaymentNotFoundException();
-        }
-
-        if (!target.equals(editedPayment) && contains(editedPayment)) {
-            throw new DuplicatePersonException();
-        }
-
-        internalList.set(index, editedPayment);
-    }
-
-    /**
-     * Removes the equivalent payment from the list.
-     * The person must exist in the list.
-     */
-    public void remove(Payment toRemove) {
-        requireNonNull(toRemove);
-        if (!internalList.remove(toRemove)) {
-            throw new PaymentNotFoundException();
-        }
-    }
-
-    public void setPayments(PaymentList replacement) {
-        requireNonNull(replacement);
-        internalList.setAll(replacement.internalList);
-    }
-
-    /**
-     * Replaces the contents of this list with {@code payments}.
-     */
-    public void setPayments(List<Payment> payments) {
-        requireAllNonNull(payments);
-        internalList.setAll(payments);
     }
 
     /**

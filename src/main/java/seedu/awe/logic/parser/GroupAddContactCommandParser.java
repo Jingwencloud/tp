@@ -1,6 +1,7 @@
 package seedu.awe.logic.parser;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPADDCONTACTCOMMAND_ERROR;
+import static seedu.awe.commons.core.Messages.MESSAGE_GROUPADDCONTACTCOMMAND_USAGE;
 import static seedu.awe.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.awe.logic.commands.GroupAddContactCommand.MESSAGE_ERROR;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_GROUP_NAME;
 import static seedu.awe.logic.parser.CliSyntax.PREFIX_NAME;
 
@@ -48,7 +49,7 @@ public class GroupAddContactCommandParser implements Parser<GroupAddContactComma
         if (!ParserUtil.arePrefixesPresent(argMultimap, PREFIX_GROUP_NAME, PREFIX_NAME)
                 || !argMultimap.getPreamble().isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                    GroupAddContactCommand.MESSAGE_USAGE));
+                    MESSAGE_GROUPADDCONTACTCOMMAND_USAGE));
         }
 
         GroupName groupName = ParserUtil.parseGroupName(argMultimap.getValue(PREFIX_GROUP_NAME).get());
@@ -75,7 +76,7 @@ public class GroupAddContactCommandParser implements Parser<GroupAddContactComma
                 addMemberIfExist(name);
             }
             if (!newMemberNames.isEmpty() && newMembersToAdd.isEmpty()) {
-                throw new ParseException(MESSAGE_ERROR);
+                throw new ParseException(MESSAGE_GROUPADDCONTACTCOMMAND_ERROR);
             }
             return newMembersToAdd;
         } catch (IndexOutOfBoundsException e) {
@@ -98,7 +99,7 @@ public class GroupAddContactCommandParser implements Parser<GroupAddContactComma
             added = true;
         }
         if (!added) {
-            throw new ParseException(GroupAddContactCommand.MESSAGE_ERROR);
+            throw new ParseException(MESSAGE_GROUPADDCONTACTCOMMAND_ERROR);
         }
         return added;
     }

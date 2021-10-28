@@ -1,0 +1,66 @@
+@startuml
+!include style.puml
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AweParser" as AweParser LOGIC_COLOR
+participant ":DeleteExpenseCommand" as DeleteExpenseCommand LOGIC_COLOR
+participant ":CommandResult" as CommandResult LOGIC_COLOR
+participant ":Group" as Group LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("deleteexpense 1")
+activate LogicManager
+
+LogicManager -> AweParser : parseCommand("deleteexpense 1")
+activate AweParser
+
+/'Clarify with tutor if there is a need to display DeleteExpenseCommandParser class within the ref'/
+ref over AweParser, DeleteExpenseCommand:get deleteExpenseCommand
+create DeleteExpenseCommand
+AweParser -> DeleteExpenseCommand
+
+
+AweParser --> LogicManager : deleteExpenseCommand
+deactivate AweParser
+
+LogicManager -> DeleteExpenseCommand : execute()
+activate DeleteExpenseCommand
+
+DeleteExpenseCommand -> Model : getExpense(int index)
+activate Model
+Model --> DeleteExpenseCommand : Expense expense
+deactivate Model
+
+DeleteExpenseCommand -> Model : getActiveGroupFromAddressBook()
+activate Model
+Model --> DeleteExpenseCommand : Group group
+deactivate Model
+
+DeleteExpenseCommand -> Group : deleteExpense(expense)
+activate Group
+Group -> DeleteExpenseCommand : Group newGroup
+deactivate Group
+
+DeleteExpenseCommand -> Model : setGroup(group, newGroup)
+activate Model
+Model --> DeleteExpenseCommand
+deactivate Model
+
+create CommandResult
+DeleteExpenseCommand -> CommandResult
+activate CommandResult
+
+CommandResult --> DeleteExpenseCommand : result
+deactivate CommandResult
+
+DeleteExpenseCommand --> LogicManager : result
+deactivate DeleteExpenseCommand
+
+[<--LogicManager
+deactivate LogicManager
+@enduml
